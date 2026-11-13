@@ -729,6 +729,65 @@
     });
     return `<svg class="pie" viewBox="0 0 200 200" role="img" aria-label="支出組成圓餅圖">${out}<circle cx="100" cy="100" r="34" fill="#FFFCF6" stroke="#3E3A39" stroke-width="3"/></svg>`;
   }
+  /* ---------- 隨手記帳（實際花費，和預估分開） ---------- */
+  function spendDefaultDate() {
+    const t = trip.days.find(d => nowIn(d.tz).date === d.date);
+    return (t || trip.days[ui.dayIdx]).date;
+  }
+  function spendHTML() {
+    const sc = trip.settleCurrency;
+    const list = (trip.spend || []).slice().sort((a, b) => (b.date + (b.time || '')).localeCompare(a.date + (a.time || '')));
+    const byCur = {}; let conv = 0;
+    list.forEach(s => { byCur[s.currency] = (byCur[s.currency] || 0) + Number(s.amount); conv += Number(s.amount) * cur(s.currency).rate; });
+    const dd = spendDefaultDate();
+    const defCur = dayOf(dd) && dayOf(dd).tz === 'Asia/Tokyo' ? 'JPY' : sc;
+    const byDate = {};
+    list.forEach(s => { (byDate[s.date] = byDate[s.date] || []).push(s); });
+    return `<section class="sumcard spendcard"><h2>隨手記帳 <small class="ratenote">實際花了多少；跟下方預估分開算</small></h2>
+      <form id="spendform" class="spendform" autocomplete="off">
+        <label>金額<input id="sp-amount" name="amount" type="number" inputmode="decimal" min="0" step="any" required placeholder="0"></label>
+        <label>幣別<select id="sp-cur" name="currency">${Object.keys(trip.currencies).map(k => `<option${k === defCur ? ' selected' : ''}>${k}</option>`).join('')}</select></label>
+        <label>類別<select id="sp-cat" name="category">${Object.entries(EXP_CAT).map(([k, v]) => `<option value="${k}"${k === 'shop' ? ' selected' : ''}>${v.label}</option>`).join('')}</select></label>
+        <label>日期<select id="sp-date" name="date">${trip.days.map(d => `<option value="${d.date}"${d.date === dd ? ' selected' : ''}>${dateLabel(d.date).md} ${esc(d.port)}</option>`).join('')}</select></label>
+        <label class="wide">買了什麼<input id="sp-note" name="note" placeholder="例：大國藥妝、一蘭拉麵"></label>
+        <button class="btn primary" type="submit">記下來</button>
+      </form>
+      <div class="sumrow big"><span>實際已花（${list.length} 筆）</span><span>${money(Math.round(conv), sc)}</span></div>
+      <div class="ratenote">${Object.entries(byCur).map(([k, v]) => money(v, k)).join('＋') || '還沒有紀錄'}${Object.keys(byCur).some(k => k !== sc) ? `；外幣依目前匯率換算` : ''}。紀錄存在這台裝置的瀏覽器；要留底請用工具選單「匯出 JSON 備份」。</div>
+      ${Object.keys(byDate).map(dt => `<div class="spendday"><div class="spenddate">${dateLabel(dt).md}（${dateLabel(dt).wd}）${esc(dayOf(dt) ? dayOf(dt).port : '')}</div>${byDate[dt].map(s => `<div class="spendrow r-${s.category}"><button type="button" class="spendmain" data-sp="${s.id}"><span>${esc(s.note || EXP_CAT[s.category].label)}</span><small>${EXP_CAT[s.category].label}${s.time ? '・' + s.time : ''}</small></button><span class="num">${money(s.amount, s.currency)}</span><button type="button" class="iconbtn" data-spdel="${s.id}" aria-label="刪除這筆">✕</button></div>`).join('')}</div>`).join('')}
+    </section>`;
+  }
+  function bindSpend() {
+    const f = $('#spendform'); if (!f) return;
+    f.onsubmit = e => {
+      e.preventDefault(); const fd = new FormData(f);
+      const amt = Number(fd.get('amount')); if (!(amt > 0)) { toast('請輸入金額'); return; }
+      const date = fd.get('date'); const tz = dayOf(date).tz; const n = nowIn(tz);
+      const rec = { id: uid('s'), date, time: n.date === date ? fmt(n.min) : '', amount: amt, currency: fd.get('currency'), category: fd.get('category'), note: fd.get('note').trim() };
+      commit(t => { (t.spend = t.spend || []).push(rec); }, `已記下 ${money(amt, rec.currency)}`);
+      const a = $('#sp-amount'); if (a) a.focus();
+    };
+    $$('[data-spdel]').forEach(b => b.onclick = () => commit(t => { t.spend = t.spend.filter(s => s.id !== b.dataset.spdel); }, '已刪除這筆，可按復原'));
+    $$('[data-sp]').forEach(b => b.onclick = () => openSpendEditor(b.dataset.sp));
+  }
+  function openSpendEditor(id) {
+    const s = trip.spend.find(x => x.id === id); if (!s) return;
+    const dlg = $('#editor');
+    dlg.innerHTML = `<form method="dialog" id="spedit"><div class="dlghead"><h2>修改這筆花費</h2><button type="button" class="iconbtn" data-close aria-label="關閉">✕</button></div>
+      <div class="dlgbody"><label>金額<input type="number" name="amount" min="0" step="any" required value="${s.amount}"></label>
+      <label>幣別<select name="currency">${Object.keys(trip.currencies).map(k => `<option${k === s.currency ? ' selected' : ''}>${k}</option>`).join('')}</select></label>
+      <label>類別<select name="category">${Object.entries(EXP_CAT).map(([k, v]) => `<option value="${k}"${k === s.category ? ' selected' : ''}>${v.label}</option>`).join('')}</select></label>
+      <label>日期<select name="date">${trip.days.map(d => `<option value="${d.date}"${d.date === s.date ? ' selected' : ''}>${dateLabel(d.date).md} ${esc(d.port)}</option>`).join('')}</select></label>
+      <label class="full">買了什麼<input name="note" value="${esc(s.note)}"></label></div>
+      <div class="dlgfoot"><button type="button" class="btn" data-close>取消</button><button type="submit" class="btn primary">儲存</button></div></form>`;
+    dlg.showModal();
+    $$('[data-close]', dlg).forEach(b => b.onclick = () => dlg.close());
+    $('#spedit').onsubmit = e => {
+      e.preventDefault(); const fd = new FormData(e.target); dlg.close();
+      commit(t => { const x = t.spend.find(y => y.id === id); Object.assign(x, { amount: Number(fd.get('amount')), currency: fd.get('currency'), category: fd.get('category'), date: fd.get('date'), note: fd.get('note').trim() }); }, '已更新');
+    };
+  }
+
   function renderExpenses() {
     const lines = expenseLines();
     const sc = trip.settleCurrency;
@@ -740,7 +799,7 @@
     const byCat = Object.keys(EXP_CAT).map(k => ({ k, v: lines.filter(l => l.cat === k).reduce((s, l) => s + (l.settle || 0), 0), color: EXP_CAT[k].color, label: EXP_CAT[k].label }));
     const tot = byCat.reduce((s, c) => s + c.v, 0) || 1;
     const rateTxt = Object.entries(trip.currencies).filter(([k]) => k !== sc).map(([k, v]) => `1 ${k} ＝ ${v.rate} ${sc}${v.rateNote ? `（${esc(v.rateNote)}）` : ''}`).join('；');
-    $('#expensespage').innerHTML = `<div class="expgrid">
+    $('#expensespage').innerHTML = spendHTML() + `<h2 class="sectiontitle">預估預算</h2><div class="expgrid">
       <div style="display:grid;gap:18px">
         <section class="sumcard"><h2>合計</h2>
           ${Object.keys(trip.currencies).map(k => `<div class="sumrow"><span>${k === sc ? '結算幣別' : '外幣'}合計（${k}）</span><span>${money(byCur[k] || 0, k)}</span></div>`).join('')}
@@ -757,6 +816,7 @@
     <section class="sumcard" style="margin-top:18px"><h2>費用明細</h2><div class="tablewrap"><table class="exptable"><thead><tr><th>日期</th><th>項目</th><th>類別</th><th class="num">單價</th><th class="num">小計</th><th class="num">換算 ${sc}</th></tr></thead><tbody>
       ${lines.map(l => `<tr class="r-${l.cat}" data-kind="${l.kind}" data-id="${esc(l.id)}" tabindex="0"><td>${l.date ? dateLabel(l.date).md : '全程'}</td><td>${esc(l.name)} ${statusTag(l.cost.status)}</td><td>${EXP_CAT[l.cat].label}</td><td class="num">${l.cost.amount == null ? '未填' : money(l.cost.amount, l.cost.currency) + '／' + perLabel[l.cost.per]}</td><td class="num">${l.total == null ? '—' : money(l.total, l.cost.currency)}</td><td class="num">${l.settle == null ? '待估' : money(l.settle, sc)}</td></tr>`).join('')}
     </tbody></table></div></section>`;
+    bindSpend();
     $('#setbtn').onclick = openSettings; $('#addfix').onclick = () => openFixedEditor(null);
     $$('.exptable tbody tr').forEach(tr => {
       const open = () => tr.dataset.kind === 'fixed' ? openFixedEditor(tr.dataset.id) : tr.dataset.kind === 'leg' ? openLegEditor(tr.dataset.id) : openItemEditor(tr.dataset.id);
@@ -842,7 +902,7 @@
   }
   function validTrip(o) { return o && Array.isArray(o.days) && o.days.length && Array.isArray(o.items) && o.currencies; }
   function normalize(o) {
-    o.fixedCosts = o.fixedCosts || []; o.legOverrides = o.legOverrides || {}; o.packing = o.packing || []; o.packingGroups = o.packingGroups || [];
+    o.spend = o.spend || []; o.fixedCosts = o.fixedCosts || []; o.legOverrides = o.legOverrides || {}; o.packing = o.packing || []; o.packingGroups = o.packingGroups || [];
     o.travelers = o.travelers || { adults: 2, children: 0 }; o.settleCurrency = o.settleCurrency || 'TWD';
     return o;
   }
@@ -885,6 +945,7 @@
       if (act === 'undo') undo();
       if (act === 'export') exportJSON();
       if (act === 'ics') exportICS();
+      if (act === 'spend') { ui.page = 'expenses'; render(); window.scrollTo(0, 0); const a = $('#sp-amount'); if (a) a.focus(); }
       if (act === 'import') $('#importfile').click();
       if (act === 'reset') askConfirm('還原成原始旅程資料？目前的草稿會被取代（可再按復原）。', '還原', () => getJSON(TRIP_FILE).then(o => commit(t => { Object.keys(t).forEach(k => delete t[k]); Object.assign(t, normalize(o)); }, '已還原原始資料')));
     };

@@ -315,3 +315,19 @@ dialog::backdrop { background: rgba(62,58,57,.35); }
 #map.notiles { background: linear-gradient(rgba(62,58,57,.06) 1px, transparent 1px) 0 0 / 40px 40px, linear-gradient(90deg, rgba(62,58,57,.06) 1px, transparent 1px) 0 0 / 40px 40px, var(--stay); }
 #map.notiles .leaflet-popup-content a { color: var(--gold); }
 #map.landmap { background: #CFE6EF; }
+.sectiontitle { font-size: 1.15rem; margin: 22px 0 10px; }
+.spendcard h2 small { font-size: .78rem; margin-left: 6px; }
+.spendform { display: grid; grid-template-columns: 1.2fr .8fr 1fr 1fr; gap: 8px 10px; align-items: end; }
+.spendform label { display: grid; gap: 3px; font-size: .82rem; min-width: 0; }
+.spendform label.wide { grid-column: 1 / -2; }
+.spendform input, .spendform select { border: 2px solid var(--ink); border-radius: 10px; padding: 7px 8px; background: #fff; width: 100%; min-width: 0; }
+.spendform #sp-amount { font-size: 1.15rem; }
+.spendform .btn { height: 40px; }
+.spendday { display: grid; gap: 4px; }
+.spenddate { font-size: .82rem; color: var(--muted); margin-top: 4px; }
+.spendrow { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: center; border: 2px solid #eee6de; border-left: 6px solid var(--transport); border-radius: 10px; padding: 4px 6px 4px 10px; }
+.spendrow.r-food { border-left-color: var(--food); } .spendrow.r-sight { border-left-color: var(--sight); } .spendrow.r-stay { border-left-color: var(--stay); } .spendrow.r-shop { border-left-color: var(--shop); }
+.spendmain { border: 0; background: none; text-align: left; padding: 2px 0; display: grid; min-width: 0; }
+.spendmain small { color: var(--muted); font-size: .72rem; }
+.spendrow .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+@media (max-width: 600px) { .spendform { grid-template-columns: 1fr 1fr; } .spendform label.wide { grid-column: 1 / -1; } .spendform .btn { grid-column: 1 / -1; } }
