@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "id": "star-explorer-2026-09",
+  "name": "探索星號・沖繩跳島",
+  "destination": "基隆 → 那霸 → 石垣島 → 基隆",
+  "ship": "探索星號 Star Explorer（麗星郵輪）",
+  "travelers": { "adults": 4, "children": 0, "note": "四位成人" },
+  "settleCurrency": "TWD",
+  "currencies": {
+    "TWD": { "symbol": "NT$", "rate": 1 },
+    "JPY": { "symbol": "¥", "rate": 0.21, "rateNote": "假設匯率，出發前以刷卡行實際匯率覆蓋" }
+  },
+  "days": [
+    { "date": "2026-09-20", "tz": "Asia/Taipei", "port": "基隆", "portType": "embark", "lat": 25.1318, "lng": 121.7406, "depart": "20:00", "allAboard": "19:00", "note": "登船日；最後登船時間以船票為準" },
+    { "date": "2026-09-21", "tz": "Asia/Tokyo", "port": "那霸", "portType": "port", "lat": 26.2226, "lng": 127.6672, "arrive": "15:00", "depart": "23:59", "allAboard": "23:00", "safeReturn": "22:30", "note": "All aboard 23:00 為推估，以 The Daily 為準" },
+    { "date": "2026-09-22", "tz": "Asia/Tokyo", "port": "石垣島", "portType": "port", "lat": 24.3312, "lng": 124.1547, "arrive": "14:00", "depart": "23:00", "allAboard": "22:00", "safeReturn": "21:30", "note": "All aboard 22:00 為推估，以 The Daily 為準" },
+    { "date": "2026-09-23", "tz": "Asia/Taipei", "port": "基隆", "portType": "disembark", "lat": 25.1318, "lng": 121.7406, "arrive": "09:00", "note": "分批下船，依船方通知" }
+  ],
+  "items": [
+    { "id": "i-0920-a", "date": "2026-09-20", "start": "15:30", "duration": 30, "category": "transport", "title": "抵達基隆港西岸旅客中心", "address": "基隆市中山區中山一路", "lat": 25.1318, "lng": 121.7406, "cost": null, "note": "記錄抵達到開始報到的耗時", "locked": false },
+    { "id": "i-0920-b", "date": "2026-09-20", "start": "16:00", "duration": 120, "category": "transport", "title": "報到・安檢・登船", "address": "基隆港西岸旅客中心", "lat": 25.1318, "lng": 121.7406, "cost": null, "note": "護照、船票、行李托運", "locked": true },
+    { "id": "i-0920-c", "date": "2026-09-20", "start": "18:30", "duration": 50, "category": "food", "title": "船上第一餐", "address": "船上自助餐廳", "onboard": true, "cost": { "amount": 0, "currency": "TWD", "per": "group", "status": "confirmed" }, "note": "船票含餐", "locked": false },
+    { "id": "i-0920-d", "date": "2026-09-20", "start": "19:30", "duration": 25, "category": "stay", "title": "認識艙房・看 The Daily", "address": "艙房", "onboard": true, "cost": null, "note": "問清楚那霸／石垣下船方式與 all aboard", "locked": false },
+    { "id": "i-0920-e", "date": "2026-09-20", "start": "20:00", "duration": 30, "category": "sight", "title": "甲板看基隆離港", "address": "露天甲板", "onboard": true, "cost": null, "note": "", "locked": true },
+    { "id": "i-0920-f", "date": "2026-09-20", "start": "21:00", "duration": 60, "category": "sight", "title": "劇院表演", "address": "船上劇院", "onboard": true, "cost": { "amount": 0, "currency": "TWD", "per": "group", "status": "confirmed" }, "note": "場次看 The Daily", "locked": false },
+    { "id": "i-0920-g", "date": "2026-09-20", "start": "22:30", "duration": 60, "category": "stay", "title": "回艙房休息", "address": "艙房", "onboard": true, "cost": null, "note": "", "locked": false },
+
+    { "id": "i-0921-a", "date": "2026-09-21", "start": "08:00", "duration": 60, "category": "food", "title": "船上早餐", "address": "船上自助餐廳", "onboard": true, "cost": { "amount": 0, "currency": "TWD", "per": "group", "status": "confirmed" }, "note": "", "locked": false },
+    { "id": "i-0921-b", "date": "2026-09-21", "start": "10:00", "duration": 120, "category": "sight", "title": "甲板與泳池", "address": "露天甲板", "onboard": true, "cost": null, "note": "", "locked": false },
+    { "id": "i-0921-c", "date": "2026-09-21", "start": "12:30", "duration": 60, "category": "food", "title": "船上午餐", "address": "主餐廳", "onboard": true, "cost": { "amount": 0, "currency": "TWD", "per": "group", "status": "confirmed" }, "note": "", "locked": false },
+    { "id": "i-0921-d", "date": "2026-09-21", "start": "15:00", "duration": 60, "category": "transport", "title": "抵達那霸・下船入境", "address": "那霸郵輪碼頭", "lat": 26.2226, "lng": 127.6672, "cost": null, "note": "抵達不等於立刻能下船，記錄實際離開碼頭時間", "locked": true },
+    { "id": "i-0921-e", "date": "2026-09-21", "start": "16:30", "duration": 150, "category": "shop", "title": "SAN-A NAHA MAIN PLACE", "address": "沖繩縣那霸市おもろまち 4-4-9", "lat": 26.2249, "lng": 127.6946, "cost": { "amount": null, "currency": "JPY", "per": "group", "status": "pending" }, "note": "至少 2 小時：3COINS、無印良品、服飾、藥妝、HANDS", "locked": false },
+    { "id": "i-0921-f", "date": "2026-09-21", "start": "19:30", "duration": 75, "category": "shop", "title": "國際通藥妝採買", "address": "那霸市國際通", "lat": 26.2152, "lng": 127.6876, "cost": { "amount": null, "currency": "JPY", "per": "group", "status": "pending" }, "note": "退稅帶護照", "locked": false },
+    { "id": "i-0921-g", "date": "2026-09-21", "start": "20:50", "duration": 50, "category": "food", "title": "一蘭拉麵 那霸國際通店", "address": "那霸市牧志 1-3", "lat": 26.2158, "lng": 127.6895, "cost": { "amount": 1500, "currency": "JPY", "per": "person", "status": "estimate" }, "note": "", "locked": false },
+    { "id": "i-0921-h", "date": "2026-09-21", "start": "22:00", "duration": 30, "category": "transport", "title": "回港・安檢上船", "address": "那霸郵輪碼頭", "lat": 26.2226, "lng": 127.6672, "cost": null, "note": "22:30 前回船為安全線", "locked": true },
+    { "id": "i-0921-i", "date": "2026-09-21", "start": "23:30", "duration": 29, "category": "sight", "title": "甲板看那霸夜景離港", "address": "露天甲板", "onboard": true, "cost": null, "note": "", "locked": false },
+
+    { "id": "i-0922-a", "date": "2026-09-22", "start": "08:00", "duration": 60, "category": "food", "title": "船上早餐", "address": "船上自助餐廳", "onboard": true, "cost": { "amount": 0, "currency": "TWD", "per": "group", "status": "confirmed" }, "note": "", "locked": false },
+    { "id": "i-0922-b", "date": "2026-09-22", "start": "10:00", "duration": 120, "category": "sight", "title": "船上活動・開箱那霸戰利品", "address": "艙房／公共區", "onboard": true, "cost": null, "note": "", "locked": false },
+    { "id": "i-0922-c", "date": "2026-09-22", "start": "12:30", "duration": 60, "category": "food", "title": "船上午餐", "address": "主餐廳", "onboard": true, "cost": { "amount": 0, "currency": "TWD", "per": "group", "status": "confirmed" }, "note": "", "locked": false },
+    { "id": "i-0922-d", "date": "2026-09-22", "start": "14:00", "duration": 45, "category": "transport", "title": "抵達石垣島・下船上車", "address": "石垣港郵輪碼頭", "lat": 24.3312, "lng": 124.1547, "cost": null, "note": "", "locked": true },
+    { "id": "i-0922-e", "date": "2026-09-22", "start": "15:20", "duration": 35, "category": "sight", "title": "川平灣・玻璃船", "address": "沖繩縣石垣市川平", "lat": 24.4549, "lng": 124.1445, "cost": { "amount": 1300, "currency": "JPY", "per": "person", "status": "pending" }, "note": "票價待確認；趕不上就只拍海色", "locked": false },
+    { "id": "i-0922-f", "date": "2026-09-22", "start": "16:20", "duration": 40, "category": "sight", "title": "石垣島鐘乳洞", "address": "沖繩縣石垣市石垣 1666", "lat": 24.3627, "lng": 124.1690, "cost": { "amount": 1400, "currency": "JPY", "per": "person", "status": "pending" }, "note": "票價待確認", "locked": false },
+    { "id": "i-0922-g", "date": "2026-09-22", "start": "17:15", "duration": 120, "category": "shop", "title": "公設市場・730 COURT・Euglena Mall", "address": "石垣市大川", "lat": 24.3409, "lng": 124.1573, "cost": { "amount": null, "currency": "JPY", "per": "group", "status": "pending" }, "note": "", "locked": false },
+    { "id": "i-0922-h", "date": "2026-09-22", "start": "19:20", "duration": 75, "category": "food", "title": "石垣牛晚餐", "address": "石垣市美崎町", "lat": 24.3392, "lng": 124.1566, "cost": { "amount": 5000, "currency": "JPY", "per": "person", "status": "estimate" }, "note": "店家未定", "locked": false },
+    { "id": "i-0922-i", "date": "2026-09-22", "start": "20:50", "duration": 30, "category": "transport", "title": "回港・安檢上船", "address": "石垣港郵輪碼頭", "lat": 24.3312, "lng": 124.1547, "cost": null, "note": "21:30 前回到碼頭為安全線", "locked": true },
+    { "id": "i-0922-j", "date": "2026-09-22", "start": "22:40", "duration": 30, "category": "sight", "title": "甲板看石垣離港", "address": "露天甲板", "onboard": true, "cost": null, "note": "", "locked": false },
+
+    { "id": "i-0923-a", "date": "2026-09-23", "start": "07:00", "duration": 60, "category": "food", "title": "船上最後早餐", "address": "船上自助餐廳", "onboard": true, "cost": { "amount": 0, "currency": "TWD", "per": "group", "status": "confirmed" }, "note": "", "locked": false },
+    { "id": "i-0923-b", "date": "2026-09-23", "start": "08:00", "duration": 40, "category": "stay", "title": "整理行李・艙房巡檢", "address": "艙房", "onboard": true, "cost": null, "note": "床下、抽屜、浴室、插座；護照、房卡", "locked": false },
+    { "id": "i-0923-c", "date": "2026-09-23", "start": "09:00", "duration": 90, "category": "transport", "title": "抵達基隆・分批下船", "address": "基隆港西岸旅客中心", "lat": 25.1318, "lng": 121.7406, "cost": null, "note": "", "locked": true }
+  ],
+  "fixedCosts": [
+    { "id": "f-fare", "name": "船票（3 晚內艙／海景）", "category": "stay", "amount": null, "currency": "TWD", "per": "person", "status": "pending", "note": "依訂單填入" },
+    { "id": "f-port", "name": "港務費與稅金", "category": "transport", "amount": null, "currency": "TWD", "per": "person", "status": "pending", "note": "依訂單" },
+    { "id": "f-tips", "name": "船上服務費", "category": "stay", "amount": null, "currency": "TWD", "per": "person", "status": "pending", "note": "確認是否已含" },
+    { "id": "f-wifi", "name": "船上網路方案", "category": "sight", "amount": null, "currency": "TWD", "per": "group", "status": "pending", "note": "" },
+    { "id": "f-tscc", "name": "基隆來回交通", "category": "transport", "amount": 500, "currency": "TWD", "per": "group", "status": "estimate", "note": "" }
+  ],
+  "legOverrides": {},
+  "packingGroups": [
+    { "id": "docs", "name": "證件與票券" },
+    { "id": "clothes", "name": "衣物" },
+    { "id": "care", "name": "盥洗與藥品" },
+    { "id": "tech", "name": "電子用品" },
+    { "id": "ship", "name": "船上必備" },
+    { "id": "shop", "name": "購物與退稅" }
+  ],
+  "packing": [
+    { "id": "p1", "group": "docs", "name": "護照（效期 6 個月以上）", "qty": 4, "note": "", "done": false },
+    { "id": "p2", "group": "docs", "name": "電子船票／登船證", "qty": 4, "note": "截圖存離線", "done": false },
+    { "id": "p3", "group": "docs", "name": "信用卡＋日圓現金", "qty": 1, "note": "", "done": false },
+    { "id": "p4", "group": "clothes", "name": "每日衣物", "qty": 4, "note": "", "done": false },
+    { "id": "p5", "group": "clothes", "name": "正式晚宴服", "qty": 1, "note": "看 The Daily 主題", "done": false },
+    { "id": "p6", "group": "clothes", "name": "泳衣・薄外套", "qty": 1, "note": "甲板風大", "done": false },
+    { "id": "p7", "group": "care", "name": "暈船藥", "qty": 1, "note": "", "done": false },
+    { "id": "p8", "group": "care", "name": "防曬乳", "qty": 1, "note": "", "done": false },
+    { "id": "p9", "group": "tech", "name": "無突波排插（非延長線）", "qty": 1, "note": "船上禁帶延長線", "done": false },
+    { "id": "p10", "group": "tech", "name": "行動電源", "qty": 2, "note": "隨身不托運", "done": false },
+    { "id": "p11", "group": "ship", "name": "磁鐵掛勾", "qty": 4, "note": "艙壁是鐵", "done": false },
+    { "id": "p12", "group": "ship", "name": "房卡套＋掛繩", "qty": 4, "note": "", "done": false },
+    { "id": "p13", "group": "shop", "name": "摺疊購物袋", "qty": 2, "note": "", "done": false },
+    { "id": "p14", "group": "shop", "name": "免稅單收納夾", "qty": 1, "note": "", "done": false }
+  ]
+}

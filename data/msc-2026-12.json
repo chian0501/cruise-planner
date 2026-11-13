@@ -1,0 +1,963 @@
+{
+  "version": 1,
+  "id": "msc-2026-12",
+  "name": "MSC 地中海榮耀號・沖繩三島",
+  "destination": "基隆 → 宮古島 → 那霸 → 石垣島 → 基隆",
+  "ship": "MSC Bellissima 地中海榮耀號",
+  "travelers": {
+    "adults": 4,
+    "children": 0,
+    "note": "兩間艙房，共 4 位（另一間人數待確認）"
+  },
+  "settleCurrency": "TWD",
+  "currencies": {
+    "TWD": {
+      "symbol": "NT$",
+      "rate": 1
+    },
+    "JPY": {
+      "symbol": "¥",
+      "rate": 0.21,
+      "rateNote": "假設匯率，出發前以刷卡行實際匯率覆蓋"
+    },
+    "USD": {
+      "symbol": "US$",
+      "rate": 32,
+      "rateNote": "假設匯率；船上消費多以美元計，以船方帳單為準"
+    }
+  },
+  "days": [
+    {
+      "date": "2026-12-08",
+      "tz": "Asia/Taipei",
+      "port": "基隆",
+      "portType": "embark",
+      "lat": 25.1318,
+      "lng": 121.7406,
+      "depart": "18:00",
+      "allAboard": "16:30",
+      "note": "登船牌：報到時間 14:00、集合站 D、艙房。最後登船時間未標，16:30 為推估"
+    },
+    {
+      "date": "2026-12-09",
+      "tz": "Asia/Tokyo",
+      "port": "宮古島",
+      "portType": "port",
+      "lat": 24.809,
+      "lng": 125.278,
+      "arrive": "08:00",
+      "depart": "18:00",
+      "allAboard": "17:00",
+      "safeReturn": "16:45",
+      "note": "港時已由 MSC App 確認；All aboard 17:00 為推估；泊位與接駁以 The Daily 為準"
+    },
+    {
+      "date": "2026-12-10",
+      "tz": "Asia/Tokyo",
+      "port": "那霸",
+      "portType": "port",
+      "lat": 26.2226,
+      "lng": 127.6672,
+      "arrive": "07:00",
+      "depart": "19:00",
+      "allAboard": "18:00",
+      "safeReturn": "17:40",
+      "note": "港時已由 MSC App 確認；All aboard 18:00 為推估；大型船可能改靠新港碼頭，泊位待確認"
+    },
+    {
+      "date": "2026-12-11",
+      "tz": "Asia/Tokyo",
+      "port": "石垣島",
+      "portType": "port",
+      "lat": 24.324,
+      "lng": 124.147,
+      "arrive": "09:00",
+      "depart": "19:00",
+      "allAboard": "18:00",
+      "safeReturn": "17:30",
+      "note": "若港序不變，石垣是最後日本港，退稅查驗在這裡辦（條件式，待船方確認）"
+    },
+    {
+      "date": "2026-12-12",
+      "tz": "Asia/Taipei",
+      "port": "基隆",
+      "portType": "disembark",
+      "lat": 25.1318,
+      "lng": 121.7406,
+      "arrive": "07:00",
+      "note": "分批下船依船方通知；Late checkout 不等於晚下船"
+    }
+  ],
+  "items": [
+    {
+      "id": "m-1208-a",
+      "date": "2026-12-08",
+      "start": "13:30",
+      "duration": 30,
+      "category": "transport",
+      "title": "抵達基隆港西岸旅客中心",
+      "address": "基隆市中山區中山一路",
+      "lat": 25.1318,
+      "lng": 121.7406,
+      "cost": null,
+      "note": "報到時間 14:00，提早半小時到",
+      "locked": false
+    },
+    {
+      "id": "m-1208-b",
+      "date": "2026-12-08",
+      "start": "14:00",
+      "duration": 90,
+      "category": "transport",
+      "title": "報到・行李托運・登船（14:00）",
+      "address": "基隆港西岸旅客中心",
+      "lat": 25.1318,
+      "lng": 121.7406,
+      "cost": null,
+      "note": "登船牌報到時間 14:00；會員優先報到依港口作業",
+      "locked": true
+    },
+    {
+      "id": "m-1208-c",
+      "date": "2026-12-08",
+      "start": "15:40",
+      "duration": 50,
+      "category": "stay",
+      "title": "進房・榮耀大道・水晶旋梯",
+      "address": "艙房／榮耀大道",
+      "onboard": true,
+      "cost": null,
+      "note": "設定 MSC for Me App、看 The Daily",
+      "locked": false
+    },
+    {
+      "id": "m-1208-d",
+      "date": "2026-12-08",
+      "start": "18:00",
+      "duration": 30,
+      "category": "sight",
+      "title": "甲板看基隆離港",
+      "address": "露天甲板",
+      "onboard": true,
+      "cost": null,
+      "note": "",
+      "locked": true
+    },
+    {
+      "id": "m-1208-e",
+      "date": "2026-12-08",
+      "start": "18:45",
+      "duration": 60,
+      "category": "food",
+      "title": "市集自助餐廳晚餐",
+      "address": "Marketplace Buffet",
+      "onboard": true,
+      "cost": {
+        "amount": 0,
+        "currency": "TWD",
+        "per": "group",
+        "status": "confirmed"
+      },
+      "note": "船票含餐",
+      "locked": false
+    },
+    {
+      "id": "m-1208-f",
+      "date": "2026-12-08",
+      "start": "20:00",
+      "duration": 60,
+      "category": "sight",
+      "title": "劇院表演",
+      "address": "劇院",
+      "onboard": true,
+      "cost": {
+        "amount": 0,
+        "currency": "TWD",
+        "per": "group",
+        "status": "confirmed"
+      },
+      "note": "會員可提早入場（待核）",
+      "locked": false
+    },
+    {
+      "id": "m-1208-g",
+      "date": "2026-12-08",
+      "start": "21:30",
+      "duration": 30,
+      "category": "stay",
+      "title": "研究宮古島下船與接駁",
+      "address": "艙房",
+      "onboard": true,
+      "cost": null,
+      "note": "確認 all aboard、接駁車位置",
+      "locked": false
+    },
+    {
+      "id": "m-1209-a",
+      "date": "2026-12-09",
+      "start": "07:00",
+      "duration": 60,
+      "category": "food",
+      "title": "船上早餐",
+      "address": "市集自助餐廳",
+      "onboard": true,
+      "cost": {
+        "amount": 0,
+        "currency": "TWD",
+        "per": "group",
+        "status": "confirmed"
+      },
+      "note": "",
+      "locked": false
+    },
+    {
+      "id": "m-1209-b",
+      "date": "2026-12-09",
+      "start": "09:00",
+      "duration": 60,
+      "category": "transport",
+      "title": "宮古島下船・接駁・叫車",
+      "address": "平良港郵輪碼頭",
+      "lat": 24.809,
+      "lng": 125.278,
+      "cost": null,
+      "note": "記錄表定抵達到真正上車的耗時；泊位待確認",
+      "locked": true
+    },
+    {
+      "id": "m-1209-c",
+      "date": "2026-12-09",
+      "start": "10:40",
+      "duration": 60,
+      "category": "sight",
+      "title": "伊良部大橋・渡口之濱",
+      "address": "沖繩縣宮古島市伊良部",
+      "lat": 24.8222,
+      "lng": 125.1772,
+      "cost": null,
+      "note": "座標約略；12 月海邊偏涼",
+      "locked": false
+    },
+    {
+      "id": "m-1209-d",
+      "date": "2026-12-09",
+      "start": "12:20",
+      "duration": 60,
+      "category": "food",
+      "title": "宮古そば午餐（平良市區）",
+      "address": "宮古島市平良",
+      "lat": 24.804,
+      "lng": 125.283,
+      "cost": {
+        "amount": 900,
+        "currency": "JPY",
+        "per": "person",
+        "status": "estimate"
+      },
+      "note": "店家未定",
+      "locked": false
+    },
+    {
+      "id": "m-1209-e",
+      "date": "2026-12-09",
+      "start": "13:50",
+      "duration": 70,
+      "category": "sight",
+      "title": "與那霸前濱海灘",
+      "address": "宮古島市下地與那霸",
+      "lat": 24.734,
+      "lng": 125.264,
+      "cost": null,
+      "note": "",
+      "locked": false
+    },
+    {
+      "id": "m-1209-f",
+      "date": "2026-12-09",
+      "start": "15:30",
+      "duration": 60,
+      "category": "shop",
+      "title": "市區補給・伴手禮",
+      "address": "宮古島市平良（唐吉訶德等）",
+      "lat": 24.7905,
+      "lng": 125.2885,
+      "cost": {
+        "amount": null,
+        "currency": "JPY",
+        "per": "group",
+        "status": "pending"
+      },
+      "note": "退稅建議留到最後日本港，條件待核",
+      "locked": false
+    },
+    {
+      "id": "m-1209-g",
+      "date": "2026-12-09",
+      "start": "16:45",
+      "duration": 30,
+      "category": "transport",
+      "title": "回港・安檢上船",
+      "address": "平良港郵輪碼頭",
+      "lat": 24.809,
+      "lng": 125.278,
+      "cost": null,
+      "note": "",
+      "locked": true
+    },
+    {
+      "id": "m-1209-h",
+      "date": "2026-12-09",
+      "start": "18:00",
+      "duration": 30,
+      "category": "sight",
+      "title": "甲板看宮古島離港",
+      "address": "露天甲板",
+      "onboard": true,
+      "cost": null,
+      "note": "",
+      "locked": false
+    },
+    {
+      "id": "m-1209-i",
+      "date": "2026-12-09",
+      "start": "19:00",
+      "duration": 90,
+      "category": "food",
+      "title": "特色餐 Tasting Menu",
+      "address": "特色餐廳",
+      "onboard": true,
+      "cost": {
+        "amount": 0,
+        "currency": "USD",
+        "per": "group",
+        "status": "pending"
+      },
+      "note": "會員權益：每航次 1 次、可帶同艙 1 位；需預約",
+      "locked": false
+    },
+    {
+      "id": "m-1209-j",
+      "date": "2026-12-09",
+      "start": "21:00",
+      "duration": 60,
+      "category": "sight",
+      "title": "劇院表演",
+      "address": "劇院",
+      "onboard": true,
+      "cost": null,
+      "note": "",
+      "locked": false
+    },
+    {
+      "id": "m-1210-a",
+      "date": "2026-12-10",
+      "start": "06:45",
+      "duration": 60,
+      "category": "food",
+      "title": "清晨入港・早餐",
+      "address": "市集自助餐廳",
+      "onboard": true,
+      "cost": {
+        "amount": 0,
+        "currency": "TWD",
+        "per": "group",
+        "status": "confirmed"
+      },
+      "note": "拍清晨入港",
+      "locked": false
+    },
+    {
+      "id": "m-1210-b",
+      "date": "2026-12-10",
+      "start": "08:00",
+      "duration": 60,
+      "category": "transport",
+      "title": "那霸下船・入境・叫車",
+      "address": "那霸郵輪碼頭（泊位待確認）",
+      "lat": 26.2226,
+      "lng": 127.6672,
+      "cost": null,
+      "note": "",
+      "locked": true
+    },
+    {
+      "id": "m-1210-c",
+      "date": "2026-12-10",
+      "start": "09:30",
+      "duration": 90,
+      "category": "sight",
+      "title": "首里城公園",
+      "address": "沖繩縣那霸市首里金城町 1-2",
+      "lat": 26.217,
+      "lng": 127.7195,
+      "cost": {
+        "amount": 400,
+        "currency": "JPY",
+        "per": "person",
+        "status": "pending"
+      },
+      "note": "復原工程中，票價與開放範圍待確認",
+      "locked": false
+    },
+    {
+      "id": "m-1210-d",
+      "date": "2026-12-10",
+      "start": "11:20",
+      "duration": 70,
+      "category": "food",
+      "title": "第一牧志公設市場午餐",
+      "address": "那霸市松尾 2-10-1",
+      "lat": 26.2142,
+      "lng": 127.6893,
+      "cost": {
+        "amount": 2000,
+        "currency": "JPY",
+        "per": "person",
+        "status": "estimate"
+      },
+      "note": "",
+      "locked": false
+    },
+    {
+      "id": "m-1210-e",
+      "date": "2026-12-10",
+      "start": "13:00",
+      "duration": 150,
+      "category": "shop",
+      "title": "ASHIBINAA Outlet",
+      "address": "沖繩縣豐見城市豐崎 1-188",
+      "lat": 26.167,
+      "lng": 127.66,
+      "cost": {
+        "amount": null,
+        "currency": "JPY",
+        "per": "group",
+        "status": "pending"
+      },
+      "note": "和上次麗星（Main Place）做對照",
+      "locked": false
+    },
+    {
+      "id": "m-1210-f",
+      "date": "2026-12-10",
+      "start": "15:45",
+      "duration": 90,
+      "category": "sight",
+      "title": "瀨長島 Umikaji Terrace",
+      "address": "沖繩縣豐見城市瀨長 174-6",
+      "lat": 26.1757,
+      "lng": 127.643,
+      "cost": null,
+      "note": "看飛機起降、夕陽前回港",
+      "locked": false
+    },
+    {
+      "id": "m-1210-g",
+      "date": "2026-12-10",
+      "start": "17:40",
+      "duration": 20,
+      "category": "transport",
+      "title": "回港・安檢上船",
+      "address": "那霸郵輪碼頭",
+      "lat": 26.2226,
+      "lng": 127.6672,
+      "cost": null,
+      "note": "",
+      "locked": true
+    },
+    {
+      "id": "m-1210-h",
+      "date": "2026-12-10",
+      "start": "19:00",
+      "duration": 30,
+      "category": "sight",
+      "title": "甲板看那霸離港",
+      "address": "露天甲板",
+      "onboard": true,
+      "cost": null,
+      "note": "",
+      "locked": false
+    },
+    {
+      "id": "m-1210-i",
+      "date": "2026-12-10",
+      "start": "19:45",
+      "duration": 75,
+      "category": "food",
+      "title": "主餐廳晚餐",
+      "address": "主餐廳",
+      "onboard": true,
+      "cost": {
+        "amount": 0,
+        "currency": "TWD",
+        "per": "group",
+        "status": "confirmed"
+      },
+      "note": "",
+      "locked": false
+    },
+    {
+      "id": "m-1210-j",
+      "date": "2026-12-10",
+      "start": "21:15",
+      "duration": 60,
+      "category": "sight",
+      "title": "會員派對",
+      "address": "船上酒吧",
+      "onboard": true,
+      "cost": null,
+      "note": "會員權益：時間地點以邀請函為準",
+      "locked": false
+    },
+    {
+      "id": "m-1211-a",
+      "date": "2026-12-11",
+      "start": "07:00",
+      "duration": 60,
+      "category": "food",
+      "title": "船上早餐",
+      "address": "市集自助餐廳",
+      "onboard": true,
+      "cost": {
+        "amount": 0,
+        "currency": "TWD",
+        "per": "group",
+        "status": "confirmed"
+      },
+      "note": "",
+      "locked": false
+    },
+    {
+      "id": "m-1211-b",
+      "date": "2026-12-11",
+      "start": "08:00",
+      "duration": 60,
+      "category": "sight",
+      "title": "Thermal Area",
+      "address": "SPA",
+      "onboard": true,
+      "cost": {
+        "amount": 0,
+        "currency": "USD",
+        "per": "group",
+        "status": "pending"
+      },
+      "note": "會員權益：本人 1 小時、18+、需預約、不可轉讓",
+      "locked": false
+    },
+    {
+      "id": "m-1211-c",
+      "date": "2026-12-11",
+      "start": "09:30",
+      "duration": 60,
+      "category": "transport",
+      "title": "石垣島下船・叫車",
+      "address": "石垣港郵輪碼頭（泊位待確認）",
+      "lat": 24.324,
+      "lng": 124.147,
+      "cost": null,
+      "note": "租車／巴士／計程車三選一，現估計程車",
+      "locked": true
+    },
+    {
+      "id": "m-1211-d",
+      "date": "2026-12-11",
+      "start": "11:20",
+      "duration": 60,
+      "category": "sight",
+      "title": "川平灣・玻璃船",
+      "address": "沖繩縣石垣市川平",
+      "lat": 24.4549,
+      "lng": 124.1445,
+      "cost": {
+        "amount": 1300,
+        "currency": "JPY",
+        "per": "person",
+        "status": "pending"
+      },
+      "note": "票價待確認",
+      "locked": false
+    },
+    {
+      "id": "m-1211-e",
+      "date": "2026-12-11",
+      "start": "12:30",
+      "duration": 60,
+      "category": "food",
+      "title": "川平午餐（石垣牛漢堡）",
+      "address": "石垣市川平",
+      "lat": 24.452,
+      "lng": 124.147,
+      "cost": {
+        "amount": 1800,
+        "currency": "JPY",
+        "per": "person",
+        "status": "estimate"
+      },
+      "note": "店家未定",
+      "locked": false
+    },
+    {
+      "id": "m-1211-f",
+      "date": "2026-12-11",
+      "start": "14:15",
+      "duration": 120,
+      "category": "shop",
+      "title": "730 COURT・公設市場・退稅採買",
+      "address": "石垣市大川",
+      "lat": 24.3409,
+      "lng": 124.1573,
+      "cost": {
+        "amount": null,
+        "currency": "JPY",
+        "per": "group",
+        "status": "pending"
+      },
+      "note": "最後日本港退稅：查驗端末位置與時段待核",
+      "locked": false
+    },
+    {
+      "id": "m-1211-g",
+      "date": "2026-12-11",
+      "start": "16:45",
+      "duration": 30,
+      "category": "transport",
+      "title": "回港・查驗・上船",
+      "address": "石垣港郵輪碼頭",
+      "lat": 24.324,
+      "lng": 124.147,
+      "cost": null,
+      "note": "保留退稅查驗時間",
+      "locked": true
+    },
+    {
+      "id": "m-1211-h",
+      "date": "2026-12-11",
+      "start": "19:00",
+      "duration": 30,
+      "category": "sight",
+      "title": "甲板看石垣離港",
+      "address": "露天甲板",
+      "onboard": true,
+      "cost": null,
+      "note": "",
+      "locked": false
+    },
+    {
+      "id": "m-1211-i",
+      "date": "2026-12-11",
+      "start": "19:30",
+      "duration": 30,
+      "category": "sight",
+      "title": "F1 模擬器",
+      "address": "遊樂區",
+      "onboard": true,
+      "cost": {
+        "amount": 0,
+        "currency": "USD",
+        "per": "group",
+        "status": "pending"
+      },
+      "note": "會員權益：1 次",
+      "locked": false
+    },
+    {
+      "id": "m-1211-j",
+      "date": "2026-12-11",
+      "start": "20:15",
+      "duration": 75,
+      "category": "food",
+      "title": "主餐廳晚餐",
+      "address": "主餐廳",
+      "onboard": true,
+      "cost": {
+        "amount": 0,
+        "currency": "TWD",
+        "per": "group",
+        "status": "confirmed"
+      },
+      "note": "",
+      "locked": false
+    },
+    {
+      "id": "m-1211-k",
+      "date": "2026-12-11",
+      "start": "21:45",
+      "duration": 45,
+      "category": "stay",
+      "title": "整理行李",
+      "address": "艙房",
+      "onboard": true,
+      "cost": null,
+      "note": "大件行李是否前一晚放門外，依船方通知",
+      "locked": false
+    },
+    {
+      "id": "m-1212-a",
+      "date": "2026-12-12",
+      "start": "06:30",
+      "duration": 60,
+      "category": "food",
+      "title": "船上最後早餐",
+      "address": "市集自助餐廳",
+      "onboard": true,
+      "cost": {
+        "amount": 0,
+        "currency": "TWD",
+        "per": "group",
+        "status": "confirmed"
+      },
+      "note": "",
+      "locked": false
+    },
+    {
+      "id": "m-1212-b",
+      "date": "2026-12-12",
+      "start": "07:40",
+      "duration": 30,
+      "category": "stay",
+      "title": "艙房巡檢",
+      "address": "艙房",
+      "onboard": true,
+      "cost": null,
+      "note": "床下、抽屜、保險箱、插座；護照、房卡",
+      "locked": false
+    },
+    {
+      "id": "m-1212-c",
+      "date": "2026-12-12",
+      "start": "08:30",
+      "duration": 90,
+      "category": "transport",
+      "title": "抵達基隆・分批下船",
+      "address": "基隆港西岸旅客中心",
+      "lat": 25.1318,
+      "lng": 121.7406,
+      "cost": null,
+      "note": "",
+      "locked": true
+    },
+    {
+      "id": "m-1208-m",
+      "date": "2026-12-08",
+      "start": "16:45",
+      "duration": 30,
+      "category": "transport",
+      "title": "安全演習・集合站 D",
+      "address": "集合站 D",
+      "onboard": true,
+      "cost": null,
+      "note": "時間依船方廣播／App 通知",
+      "locked": true
+    }
+  ],
+  "fixedCosts": [
+    {
+      "id": "f-fare",
+      "name": "船票（兩間）",
+      "category": "stay",
+      "amount": null,
+      "currency": "TWD",
+      "per": "group",
+      "status": "pending",
+      "note": "依訂單填入"
+    },
+    {
+      "id": "f-port",
+      "name": "港務費與稅金",
+      "category": "transport",
+      "amount": null,
+      "currency": "TWD",
+      "per": "person",
+      "status": "pending",
+      "note": "依訂單"
+    },
+    {
+      "id": "f-tips",
+      "name": "船上服務費",
+      "category": "stay",
+      "amount": null,
+      "currency": "USD",
+      "per": "person",
+      "status": "pending",
+      "note": "確認是否已含在船票"
+    },
+    {
+      "id": "f-wifi",
+      "name": "船上網路方案",
+      "category": "sight",
+      "amount": null,
+      "currency": "USD",
+      "per": "group",
+      "status": "pending",
+      "note": ""
+    },
+    {
+      "id": "f-klg",
+      "name": "基隆來回交通",
+      "category": "transport",
+      "amount": 500,
+      "currency": "TWD",
+      "per": "group",
+      "status": "estimate",
+      "note": ""
+    }
+  ],
+  "legOverrides": {},
+  "packingGroups": [
+    {
+      "id": "docs",
+      "name": "證件與票券"
+    },
+    {
+      "id": "clothes",
+      "name": "衣物"
+    },
+    {
+      "id": "care",
+      "name": "盥洗與藥品"
+    },
+    {
+      "id": "tech",
+      "name": "電子用品"
+    },
+    {
+      "id": "ship",
+      "name": "船上必備"
+    },
+    {
+      "id": "shop",
+      "name": "購物與退稅"
+    }
+  ],
+  "packing": [
+    {
+      "id": "p1",
+      "group": "docs",
+      "name": "護照（效期 6 個月以上）",
+      "qty": 4,
+      "note": "",
+      "done": false
+    },
+    {
+      "id": "p2",
+      "group": "docs",
+      "name": "電子船票・行李條",
+      "qty": 4,
+      "note": "登船牌加到 Apple 錢包；截圖存離線",
+      "done": false
+    },
+    {
+      "id": "p3",
+      "group": "docs",
+      "name": "MSC 會員帳號",
+      "qty": 2,
+      "note": "會員權益：",
+      "done": false
+    },
+    {
+      "id": "p4",
+      "group": "docs",
+      "name": "信用卡＋日圓現金",
+      "qty": 1,
+      "note": "",
+      "done": false
+    },
+    {
+      "id": "p5",
+      "group": "clothes",
+      "name": "每日衣物",
+      "qty": 5,
+      "note": "",
+      "done": false
+    },
+    {
+      "id": "p6",
+      "group": "clothes",
+      "name": "防風外套",
+      "qty": 4,
+      "note": "12 月沖繩約 18–22°C，甲板風大",
+      "done": false
+    },
+    {
+      "id": "p7",
+      "group": "clothes",
+      "name": "正式晚宴服",
+      "qty": 1,
+      "note": "看 The Daily 主題",
+      "done": false
+    },
+    {
+      "id": "p8",
+      "group": "care",
+      "name": "暈船藥",
+      "qty": 1,
+      "note": "",
+      "done": false
+    },
+    {
+      "id": "p9",
+      "group": "care",
+      "name": "防曬乳",
+      "qty": 1,
+      "note": "",
+      "done": false
+    },
+    {
+      "id": "p10",
+      "group": "tech",
+      "name": "無突波排插（非延長線）",
+      "qty": 2,
+      "note": "每房一個",
+      "done": false
+    },
+    {
+      "id": "p11",
+      "group": "tech",
+      "name": "行動電源",
+      "qty": 2,
+      "note": "隨身不托運",
+      "done": false
+    },
+    {
+      "id": "p12",
+      "group": "tech",
+      "name": "MSC for Me App 預先下載登入",
+      "qty": 1,
+      "note": "",
+      "done": false
+    },
+    {
+      "id": "p13",
+      "group": "ship",
+      "name": "磁鐵掛勾",
+      "qty": 4,
+      "note": "艙壁是鐵",
+      "done": false
+    },
+    {
+      "id": "p14",
+      "group": "ship",
+      "name": "房卡套＋掛繩",
+      "qty": 4,
+      "note": "",
+      "done": false
+    },
+    {
+      "id": "p15",
+      "group": "shop",
+      "name": "摺疊購物袋",
+      "qty": 2,
+      "note": "",
+      "done": false
+    },
+    {
+      "id": "p16",
+      "group": "shop",
+      "name": "免稅單收納夾",
+      "qty": 1,
+      "note": "最後日本港查驗用",
+      "done": false
+    }
+  ]
+}

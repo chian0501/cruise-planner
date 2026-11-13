@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>郵輪旅程規劃</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="brand" id="brand" aria-hidden="true"></div>
+  <div class="trip-summary">
+    <h1 id="tripname">郵輪旅程</h1>
+    <p id="tripmeta" class="tripmeta"></p>
+    <label class="tripswitch">切換旅程 <select id="tripswitch" aria-label="切換旅程"></select></label>
+  </div>
+  <div class="totalbox">
+    <span class="totallabel">總花費</span>
+    <span id="totalvalue" class="totalvalue">＊＊＊＊</span>
+    <button id="eye" class="eye" type="button" aria-pressed="false" aria-label="顯示總花費"></button>
+  </div>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="頁面">
+  <button role="tab" data-page="plan" aria-selected="true">行程規劃</button>
+  <button role="tab" data-page="expenses" aria-selected="false">費用總覽</button>
+  <button role="tab" data-page="packing" aria-selected="false">攜帶用品</button>
+</nav>
+
+<main>
+  <section id="planpage" class="page">
+    <div id="workspace">
+      <div class="mapcol">
+        <section id="mappanel" class="panel">
+          <div class="mapheading">
+            <h2>地圖</h2>
+            <div class="mapbuttons">
+              <button id="previewroute" type="button">路徑預覽</button>
+              <button id="fit" type="button" class="active">整天概覽</button>
+              <button id="voyage" type="button">全航程</button>
+            </div>
+          </div>
+          <div id="map" role="region" aria-label="行程地圖"></div>
+        </section>
+        <section id="routepanel" class="panel">
+          <details open>
+            <summary>交通明細 <span id="routecount"></span></summary>
+            <div id="routelist"></div>
+          </details>
+        </section>
+      </div>
+      <section id="calendarpanel" class="panel">
+        <div class="paneltoolbar">
+          <div class="caltitle">
+            <h2>行事曆</h2>
+            <span id="yearmonth" class="yearmonth"></span>
+          </div>
+          <div class="calendar-viewtoggle" role="group" aria-label="檢視">
+            <button type="button" data-view="week" aria-pressed="true">週</button>
+            <button type="button" data-view="day" aria-pressed="false">單日</button>
+          </div>
+          <div class="toolbarbuttons">
+            <button type="button" id="undo" class="toolbtn" aria-label="復原">↶ 復原</button>
+            <button type="button" id="addplace" class="toolbtn addbtn" aria-label="新增地點">＋<span class="addtext"> 新增地點</span></button>
+          </div>
+        </div>
+        <div id="calendar"></div>
+      </section>
+    </div>
+  </section>
+
+  <section id="expensespage" class="page" hidden></section>
+  <section id="packingpage" class="page" hidden></section>
+</main>
+
+<div class="toolfab">
+  <div id="toolmenu" class="toolmenu" role="menu" hidden>
+    <button role="menuitem" data-act="add">＋ 新增行程</button>
+    <button role="menuitem" data-act="undo">↶ 復原</button>
+    <button role="menuitem" data-act="export">匯出 JSON 備份</button>
+    <button role="menuitem" data-act="import">匯入 JSON</button>
+    <button role="menuitem" data-act="ics">匯出行事曆 ICS</button>
+    <button role="menuitem" data-act="reset">還原原始資料</button>
+  </div>
+  <button id="toolbtn" class="toolbtn-main" type="button" aria-expanded="false" aria-controls="toolmenu" aria-label="工具選單">
+    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></svg>
+  </button>
+</div>
+<input type="file" id="importfile" accept="application/json,.json" hidden>
+
+<dialog id="editor"></dialog>
+<div id="popover" class="popover" hidden></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="illustrations.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
