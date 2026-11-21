@@ -40,7 +40,7 @@
 
   let trip = null;
   let history = [];
-  const ui = { page: 'plan', view: 'week', dayIdx: 0, prevDayIdx: null, selected: null, showTotal: false, mapMode: 'fit', packFilter: 'all', packQuery: '', bounceIdx: null };
+  const ui = { page: 'plan', view: 'week', dayIdx: 0, prevDayIdx: null, selected: null, showTotal: false, mapMode: 'fit', packFilter: 'all', packQuery: '', bounceIdx: null, planB: {} };
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -57,7 +57,8 @@
       .formatToParts(new Date(ms)).forEach(x => { p[x.type] = x.value; });
     return p;
   }
-  function nowIn(tz) { const p = zonedParts(Date.now(), tz); return { date: `${p.year}-${p.month}-${p.day}`, min: Number(p.hour) * 60 + Number(p.minute) }; }
+  const NOW_AT = (() => { const v = new URLSearchParams(location.search).get('now'); const t = v ? Date.parse(v) : NaN; return isNaN(t) ? null : t; })(); // ?now=2026-12-10T09:30:00+09:00 可模擬當下時間（測試用）
+  function nowIn(tz) { const p = zonedParts(NOW_AT != null ? NOW_AT : Date.now(), tz); return { date: `${p.year}-${p.month}-${p.day}`, min: Number(p.hour) * 60 + Number(p.minute) }; }
   function zonedToUtc(date, hhmm, tz) {
     const [y, mo, d] = date.split('-').map(Number); const [h, mi] = hhmm.split(':').map(Number);
     let guess = Date.UTC(y, mo - 1, d, h, mi);
@@ -262,13 +263,27 @@
     if (lo > hi) { lo = 8 * 60; hi = 20 * 60; }
     return { lo, hi: Math.max(hi, lo + 30) };
   }
+  /* ---------- 今天橫幅與 Plan B ---------- */
+  function todayBannerHTML(d) {
+    if (!d.allAboard || d.portType !== 'port') return '';
+    const now = nowIn(d.tz); if (now.date !== d.date) return '';
+    const left = toMin(d.allAboard) - now.min;
+    const late = left <= 60;
+    const msg = left <= 0 ? '已過 All aboard，立刻回船' : (left <= 60 ? `只剩 ${durText(left)}，現在就該往碼頭走` : `還有 ${durText(left)}；目標 ${fmt(toMin(d.allAboard) - 60)} 前回到船上`);
+    return `<div class="todaybanner${late ? ' late' : ''}" id="todaybanner" role="status"><span class="tb-label">今天・${esc(d.port)}　All aboard</span><span class="tb-aboard">${d.allAboard}</span><span class="tb-left">${msg}</span></div>`;
+  }
+  function planBHTML(d) {
+    const p = d.planB; if (!p || !p.steps || !p.steps.length) return '';
+    const open = !!ui.planB[d.date];
+    return `<div class="planb"><button type="button" aria-pressed="${open}" aria-controls="planbbody" data-planb="${d.date}">☔ Plan B：${esc(p.title)}</button><div class="planb-body" id="planbbody"${open ? '' : ' hidden'}>${p.trigger ? `<div class="pb-trigger">什麼時候改走：${esc(p.trigger)}</div>` : ''}<ol>${p.steps.map(x => `<li><b>${esc(x.time || '')}</b>${esc(x.text)}</li>`).join('')}</ol></div></div>`;
+  }
   function dayHTML() {
     const d = trip.days[ui.dayIdx];
     const info = computeDay(d.date);
     const { lo, hi } = dayRange(info);
     const pct = m => ((m - lo) / (hi - lo) * 100).toFixed(3) + '%';
     // 前言：港口資訊
-    let intro = `<div class="timeline-intro"><div class="portcard"><b>${esc(d.port)}</b>`;
+    let intro = `<div class="timeline-intro">${todayBannerHTML(d)}<div class="portcard"><b>${esc(d.port)}</b>`;
     const typ = { embark: '登船日', disembark: '下船日', port: '靠港日', sea: '海上航行日' }[d.portType] || '';
     intro += `<span class="portchip">${typ}・${tzShort(d.tz)}</span>`;
     if (d.arrive) intro += `<span class="portchip">抵達 ${d.arrive}</span>`;
@@ -281,6 +296,7 @@
       intro += `<div class="shoretime">可上岸時間約 ${durText(shore)}（表定抵達到${d.safeReturn ? '安全回船線' : 'All aboard'}，未扣下船入境排隊）</div>`;
     }
     if (d.note) intro += `<div class="shoretime">📝 ${esc(d.note)}</div>`;
+    intro += planBHTML(d);
     const allWarns = Object.entries(info.warns);
     if (allWarns.length) intro += `<ul class="warnlist">${allWarns.map(([id, ws]) => { const it = trip.items.find(x => x.id === id); return `<li>${esc(it.title)}：${esc(ws.join('；'))}</li>`; }).join('')}</ul>`;
     intro += `</div>`;
@@ -351,6 +367,8 @@
         } else if (line) line.remove();
       });
     }
+    const tb = $('#todaybanner');
+    if (tb) { const d = trip.days[ui.dayIdx]; const tmp = document.createElement('div'); tmp.innerHTML = todayBannerHTML(d); const nb = tmp.firstElementChild; if (nb) { tb.className = nb.className; tb.innerHTML = nb.innerHTML; } }
     const list = $('.timeline-list');
     if (list) {
       const d = trip.days[ui.dayIdx]; const now = nowIn(d.tz);
@@ -879,7 +897,7 @@
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; document.body.appendChild(a); a.click();
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
   }
-  function exportJSON() { if (EMBED) { showText('JSON 備份', JSON.stringify(trip, null, 2), '線上版不能直接下載檔案。按「複製」後貼到記事本存成 .json，或傳給超能幹貓更新正本。'); return; } download(`cruise-trip-${trip.days[0].date}.json`, JSON.stringify(trip, null, 2), 'application/json'); toast('已匯出 JSON 備份'); }
+  function exportJSON() { if (EMBED) { showText('JSON 備份', JSON.stringify(trip, null, 2), '線上版不能直接下載檔案。按「複製」後貼到記事本存成 .json，或傳給能幹貓更新正本。'); return; } download(`cruise-trip-${trip.days[0].date}.json`, JSON.stringify(trip, null, 2), 'application/json'); toast('已匯出 JSON 備份'); }
   function exportICS() {
     const icsDate = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
     const escI = s => String(s || '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
@@ -925,6 +943,12 @@
       const i = Number(st.dataset.idx); if (i === ui.dayIdx) return;
       ui.dayIdx = i; ui.bounceIdx = i; ui.selected = null; renderPlan();
     });
+    $('#calendar').addEventListener('click', e => {
+      const b = e.target.closest('[data-planb]'); if (!b) return;
+      const date = b.dataset.planb; ui.planB[date] = !ui.planB[date];
+      b.setAttribute('aria-pressed', String(!!ui.planB[date]));
+      const body = $('#planbbody'); if (body) body.hidden = !ui.planB[date];
+    });
     $('#undo').onclick = undo;
     $('#addplace').onclick = () => openItemEditor(null);
     $('#previewroute').onclick = () => { ui.mapMode = 'route'; if (!ui.selected) { const it = itemsOn(trip.days[ui.dayIdx].date).filter(hasLoc)[1]; if (it) ui.selected = it.id; } renderMap(); };
@@ -969,10 +993,16 @@
     try { localStorage.setItem('cruise-planner-current', entry.id); } catch (e) { /* 略過 */ }
     let draft = null;
     try { draft = JSON.parse(localStorage.getItem(STORE_KEY) || 'null'); } catch (e) { draft = null; }
-    if (validTrip(draft)) trip = normalize(draft);
-    else trip = normalize(await getJSON(TRIP_FILE));
+    const fresh = normalize(await getJSON(TRIP_FILE));
+    if (validTrip(draft) && (draft.revision || null) === (fresh.revision || null)) trip = normalize(draft);
+    else {
+      // 資料有新版：舊草稿另存備份，改用新版（避免舊行程蓋掉重排後的行程）
+      if (validTrip(draft)) { try { localStorage.setItem(STORE_KEY + ':backup', JSON.stringify(draft)); } catch (e) { /* 略過 */ } ui.newRevision = true; }
+      trip = fresh;
+    }
     history = []; ui.selected = null; ui.prevDayIdx = null;
     const ti = trip.days.findIndex(d => nowIn(d.tz).date === d.date); ui.dayIdx = ti >= 0 ? ti : 0;
+    if (ti >= 0 && trip.days[ti].portType !== 'embark') ui.view = 'day'; // 旅程當天直接開今天的港口卡
   }
   async function boot() {
     let trips = [];
@@ -987,6 +1017,7 @@
     sw.innerHTML = trips.map(t => `<option value="${esc(t.id)}"${t.id === entry.id ? ' selected' : ''}>${esc(t.name)}</option>`).join('');
     sw.onchange = async () => { const en = trips.find(t => t.id === sw.value); try { await loadTrip(en); render(); toast('已切換到 ' + en.name); } catch (e) { toast('讀不到這趟旅程的資料'); } };
     bindStatic(); render();
+    if (ui.newRevision) { ui.newRevision = false; toast('行程已更新成新版；你之前的修改備份在這台裝置（瀏覽器草稿）'); }
     window.__cruise = { get trip() { return trip; }, ui, computeDay, expenseLines, zonedToUtc };
   }
   boot();
