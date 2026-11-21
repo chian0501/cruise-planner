@@ -921,7 +921,7 @@
   function validTrip(o) { return o && Array.isArray(o.days) && o.days.length && Array.isArray(o.items) && o.currencies; }
   function normalize(o) {
     o.spend = o.spend || []; o.fixedCosts = o.fixedCosts || []; o.legOverrides = o.legOverrides || {}; o.packing = o.packing || []; o.packingGroups = o.packingGroups || [];
-    o.travelers = o.travelers || { adults: 2, children: 0 }; o.settleCurrency = o.settleCurrency || 'TWD';
+    o.travelers = o.travelers || { adults: 1, children: 0 }; o.settleCurrency = o.settleCurrency || 'TWD';
     return o;
   }
 

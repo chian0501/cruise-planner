@@ -373,7 +373,7 @@
         "per": "group",
         "status": "pending"
       },
-      "note": "會員權益：每航次 1 次、可帶同艙 1 位；需預約",
+      "note": "會員權益：每航次 1 次；需預約",
       "locked": false
     },
     {
@@ -1013,7 +1013,7 @@
       "group": "tech",
       "name": "無突波排插（非延長線）",
       "qty": 1,
-      "note": "每房一個",
+      "note": "",
       "done": false
     },
     {
