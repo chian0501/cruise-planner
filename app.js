@@ -168,7 +168,7 @@
     const n = trip.days.length;
     const places = new Set(trip.items.filter(i => !i.onboard).map(i => i.title)).size;
     const ports = trip.days.filter(d => d.portType === 'port').length;
-    $('#tripmeta').innerHTML = `<span>🛳 ${esc(trip.ship)}</span><span>📍 ${esc(trip.destination)}</span><span>${n} 天 ${Math.max(0, n - 1)} 夜</span><span>${ports} 個靠港</span><span>${places} 個地點</span><span>${travelers()} 位旅客</span>`;
+    $('#tripmeta').innerHTML = `<span>🛳 ${esc(trip.ship)}</span><span>📍 ${esc(trip.destination)}</span><span>${n} 天 ${Math.max(0, n - 1)} 夜</span><span>${ports} 個靠港</span><span>${places} 個地點</span><span>費用以 ${travelers()} 人估算</span>`;
     const g = grandTotal();
     const sym = cur(trip.settleCurrency).symbol;
     $('#totalvalue').textContent = ui.showTotal ? sym + g.total.toLocaleString('zh-TW') + (g.pending ? '+' : '') : '＊＊＊＊';
@@ -822,7 +822,7 @@
         <section class="sumcard"><h2>合計</h2>
           ${Object.keys(trip.currencies).map(k => `<div class="sumrow"><span>${k === sc ? '結算幣別' : '外幣'}合計（${k}）</span><span>${money(byCur[k] || 0, k)}</span></div>`).join('')}
           <div class="sumrow big"><span>換算總額</span><span>${money(settleTotal, sc)}${pending.length ? ' +' : ''}</span></div>
-          <div class="ratenote">${rateTxt}。每筆先換算成 ${sc} 再合計，最後四捨五入。旅客 ${travelers()} 位、每車以 4 人計（${vehicles()} 車）。</div>
+          <div class="ratenote">${rateTxt}。每筆先換算成 ${sc} 再合計，最後四捨五入。費用以 ${travelers()} 人估算（公開版預設 1 人，可按「調整旅客與匯率」改）、每車以 4 人計（${vehicles()} 車）。</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="setbtn" type="button">調整旅客與匯率</button><button class="btn primary" id="addfix" type="button">＋ 固定費用</button></div>
         </section>
         <div class="budgetwarn">⚠ ${pending.length} 筆金額待填、${estimated.length} 筆為估算。總額會隨確認而變動。${pending.length ? '<br>待填：' + pending.map(p => esc(p.name)).join('、') : ''}</div>

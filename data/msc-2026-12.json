@@ -5,9 +5,8 @@
   "destination": "基隆 → 宮古島 → 那霸 → 石垣島 → 基隆",
   "ship": "MSC Bellissima 地中海榮耀號",
   "travelers": {
-    "adults": 4,
-    "children": 0,
-    "note": "兩間艙房，共 4 位（另一間人數待確認）"
+    "adults": 1,
+    "children": 0
   },
   "settleCurrency": "TWD",
   "currencies": {
@@ -35,8 +34,7 @@
       "lat": 25.1318,
       "lng": 121.7406,
       "depart": "18:00",
-      "allAboard": "16:30",
-      "note": "登船牌：報到時間 14:00、集合站 D、艙房。最後登船時間未標，16:30 為推估"
+      "note": "登船日；登船相關時間以船票為準"
     },
     {
       "date": "2026-12-09",
@@ -156,34 +154,6 @@
   ],
   "items": [
     {
-      "id": "m-1208-a",
-      "date": "2026-12-08",
-      "start": "13:30",
-      "duration": 30,
-      "category": "transport",
-      "title": "抵達基隆港西岸旅客中心",
-      "address": "基隆市中山區中山一路",
-      "lat": 25.1318,
-      "lng": 121.7406,
-      "cost": null,
-      "note": "報到時間 14:00，提早半小時到",
-      "locked": false
-    },
-    {
-      "id": "m-1208-b",
-      "date": "2026-12-08",
-      "start": "14:00",
-      "duration": 90,
-      "category": "transport",
-      "title": "報到・行李托運・登船（14:00）",
-      "address": "基隆港西岸旅客中心",
-      "lat": 25.1318,
-      "lng": 121.7406,
-      "cost": null,
-      "note": "登船牌報到時間 14:00；會員優先報到依港口作業",
-      "locked": true
-    },
-    {
       "id": "m-1208-c",
       "date": "2026-12-08",
       "start": "15:40",
@@ -195,19 +165,6 @@
       "cost": null,
       "note": "設定 MSC for Me App、看 The Daily",
       "locked": false
-    },
-    {
-      "id": "m-1208-m",
-      "date": "2026-12-08",
-      "start": "16:45",
-      "duration": 30,
-      "category": "transport",
-      "title": "安全演習・集合站 D",
-      "address": "集合站 D",
-      "onboard": true,
-      "cost": null,
-      "note": "時間依船方廣播／App 通知",
-      "locked": true
     },
     {
       "id": "m-1208-d",
@@ -300,7 +257,7 @@
       "lat": 24.809,
       "lng": 125.278,
       "cost": null,
-      "note": "【估算】08:00 靠岸，約 08:50 才輪到下船。4 人坐 1 台計程車即可，出發前先電話或 App 預約。計程車全程以跳錶估算（見交通明細）；若要司機全程等你，改問「包車 4–5 小時」價格（未查到公開價）。【待查】靠哪個碼頭（下崎離市區約 3 km、漲水較近）以 The Daily／宮古島市港灣課公告為準。",
+      "note": "【估算】08:00 靠岸，約 08:50 才輪到下船。計程車出發前先電話或 App 預約。計程車全程以跳錶估算（見交通明細）；若要司機全程等你，改問「包車 4–5 小時」價格（未查到公開價）。【待查】靠哪個碼頭（下崎離市區約 3 km、漲水較近）以 The Daily／宮古島市港灣課公告為準。",
       "locked": true
     },
     {
@@ -811,7 +768,7 @@
   "fixedCosts": [
     {
       "id": "f-fare",
-      "name": "船票（兩間）",
+      "name": "船票",
       "category": "stay",
       "amount": null,
       "currency": "TWD",
@@ -983,7 +940,7 @@
       "id": "p1",
       "group": "docs",
       "name": "護照（效期 6 個月以上）",
-      "qty": 4,
+      "qty": 1,
       "note": "",
       "done": false
     },
@@ -991,16 +948,16 @@
       "id": "p2",
       "group": "docs",
       "name": "電子船票・行李條",
-      "qty": 4,
-      "note": "登船牌加到 Apple 錢包；截圖存離線",
+      "qty": 1,
+      "note": "加到 Apple 錢包；截圖存離線",
       "done": false
     },
     {
       "id": "p3",
       "group": "docs",
       "name": "MSC 會員帳號",
-      "qty": 2,
-      "note": "會員權益：",
+      "qty": 1,
+      "note": "",
       "done": false
     },
     {
@@ -1023,7 +980,7 @@
       "id": "p6",
       "group": "clothes",
       "name": "防風外套",
-      "qty": 4,
+      "qty": 1,
       "note": "12 月沖繩約 18–22°C，甲板風大",
       "done": false
     },
@@ -1055,7 +1012,7 @@
       "id": "p10",
       "group": "tech",
       "name": "無突波排插（非延長線）",
-      "qty": 2,
+      "qty": 1,
       "note": "每房一個",
       "done": false
     },
@@ -1063,7 +1020,7 @@
       "id": "p11",
       "group": "tech",
       "name": "行動電源",
-      "qty": 2,
+      "qty": 1,
       "note": "隨身不托運",
       "done": false
     },
@@ -1079,7 +1036,7 @@
       "id": "p13",
       "group": "ship",
       "name": "磁鐵掛勾",
-      "qty": 4,
+      "qty": 1,
       "note": "艙壁是鐵",
       "done": false
     },
@@ -1087,7 +1044,7 @@
       "id": "p14",
       "group": "ship",
       "name": "房卡套＋掛繩",
-      "qty": 4,
+      "qty": 1,
       "note": "",
       "done": false
     },
@@ -1095,7 +1052,7 @@
       "id": "p15",
       "group": "shop",
       "name": "摺疊購物袋",
-      "qty": 2,
+      "qty": 1,
       "note": "",
       "done": false
     },
