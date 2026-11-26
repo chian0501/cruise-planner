@@ -369,6 +369,37 @@
     }
     if (fx && fx.rates && applyFx(fx)) { save(); if (ui.page === 'expenses') renderExpenses(); renderHeader(); }
   }
+  function bookingHTML(it) {
+    const b = it.booking; if (!b) return '';
+    const parts = [b.time && `${esc(b.time)} 訂位`, b.people && `${esc(b.people)} 位`, b.name && esc(b.name), b.ref && `代號 ${esc(b.ref)}`].filter(Boolean);
+    return parts.length ? `<div class="cardnote booking">📌 ${parts.join('・')}</div>` : '';
+  }
+  /* ---------- 緊急聯絡＋小知識 ---------- */
+  const editable = c => !c.phone || c.status === 'user';
+  const telHref = n => 'tel:' + String(n).replace(/[^0-9+]/g, '');
+  function openEmergency() {
+    const em = trip.emergency;
+    const dlg = $('#editor');
+    if (!em) { toast('這趟旅程還沒有緊急聯絡資料'); return; }
+    dlg.innerHTML = `<form method="dialog" id="sosform"><div class="dlghead"><h2>🆘 緊急聯絡・小知識</h2><button type="button" class="iconbtn" data-close aria-label="關閉">✕</button></div>
+      <div class="dlgbody sosbody">
+        <ul class="soslist">${em.contacts.map(c => `<li class="${c.phone ? '' : 'pend'}"><div class="sos-label">${esc(c.label)}${c.status === 'pending' && !c.phone ? ' <span class="tag pend">待確認</span>' : ''}</div>
+          ${c.phone ? `<a class="sos-call" href="${telHref(c.phone)}">📞 ${esc(c.phone)}</a>${c.intl ? `<span class="sos-intl">台灣手機漫遊撥 <a href="${telHref(c.intl)}">${esc(c.intl)}</a></span>` : ''}` : ''}${editable(c) ? `<input name="sos-${esc(c.id)}" inputmode="tel" value="${esc(c.phone || '')}" placeholder="拿到號碼後填這裡" aria-label="${esc(c.label)} 電話">` : ''}
+          ${c.note ? `<div class="sos-note">${esc(c.note)}</div>` : ''}</li>`).join('')}</ul>
+        <h3 class="sos-h">小知識</h3>
+        <dl class="sostips">${em.tips.map(t => `<dt>${esc(t.title)}</dt><dd>${esc(t.text)}</dd>`).join('')}</dl>
+        <p class="sos-src">號碼來源：外交部領事事務局（${esc(em.updated || '')} 查）。110／119 為日本通用。</p>
+      </div>
+      <div class="dlgfoot"><button type="button" class="btn" data-close>關閉</button>${em.contacts.some(editable) ? '<button type="submit" class="btn primary">儲存填的號碼</button>' : ''}</div></form>`;
+    dlg.showModal();
+    $$('[data-close]', dlg).forEach(b => b.onclick = () => dlg.close());
+    $('#sosform').onsubmit = e => {
+      e.preventDefault(); const fd = new FormData(e.target); dlg.close();
+      const fill = {}; em.contacts.forEach(c => { if (!editable(c)) return; const v = (fd.get('sos-' + c.id) || '').trim(); if (v !== (c.phone || '')) fill[c.id] = v; });
+      if (!Object.keys(fill).length) return;
+      commit(t => { t.emergency.contacts.forEach(c => { if (c.id in fill) { c.phone = fill[c.id]; c.status = fill[c.id] ? 'user' : 'pending'; } }); }, '已存緊急號碼（存在這台裝置，可按復原）');
+    };
+  }
   function planBHTML(d) {
     const p = d.planB; if (!p || !p.steps || !p.steps.length) return '';
     const open = !!ui.planB[d.date];
@@ -388,6 +419,7 @@
     if (d.allAboard) intro += `<span class="portchip aboard">All aboard ${d.allAboard}</span>`;
     if (d.safeReturn) intro += `<span class="portchip">安全回船線 ${d.safeReturn}</span>`;
     intro += wxChip(d);
+    if (trip.emergency) intro += `<button type="button" class="portchip sos" data-sos>🆘 緊急聯絡</button>`;
     intro += `</div>`;
     if (d.portType === 'port' && d.arrive && (d.safeReturn || d.allAboard)) {
       const shore = toMin(d.safeReturn || d.allAboard) - toMin(d.arrive);
@@ -417,7 +449,7 @@
       }
       const warn = info.warns[it.id];
       const cost = it.cost && it.cost.amount != null ? `${money(it.cost.amount, it.cost.currency)}／${perLabel[it.cost.per]}${statusTag(it.cost.status)}` : (it.cost && it.cost.status === 'pending' ? '<span class="tag pend">金額待填</span>' : '');
-      cards += `<div class="timeline-time-row" data-id="${it.id}" data-min="${toMin(it.start)}"><div class="rowtime">${it.start}</div><div class="timeline-card cat-${it.category}" tabindex="0" role="button" aria-label="${esc(it.title)} ${it.start}"><h3>${esc(it.title)}${it.locked ? '<span class="tag lock">已鎖定</span>' : ''}${it.onboard ? '<span class="tag">船上</span>' : ''}</h3><div class="cardmeta"><span>${it.start}–${fmt(endMin(it))}・${durText(Number(it.duration))}</span><span>${CAT[it.category].label}</span>${it.address ? `<span>${esc(it.address)}</span>` : ''}${cost ? `<span>${cost}</span>` : ''}</div>${it.note ? `<div class="cardnote">${esc(it.note)}</div>` : ''}${warn ? `<div class="cardnote"><span class="tag warn">注意</span> ${esc(warn.join('；'))}</div>` : ''}</div></div>`;
+      cards += `<div class="timeline-time-row" data-id="${it.id}" data-min="${toMin(it.start)}"><div class="rowtime">${it.start}</div><div class="timeline-card cat-${it.category}" tabindex="0" role="button" aria-label="${esc(it.title)} ${it.start}"><h3>${esc(it.title)}${it.locked ? '<span class="tag lock">已鎖定</span>' : ''}${it.onboard ? '<span class="tag">船上</span>' : ''}</h3><div class="cardmeta"><span>${it.start}–${fmt(endMin(it))}・${durText(Number(it.duration))}</span><span>${CAT[it.category].label}</span>${it.address ? `<span>${esc(it.address)}</span>` : ''}${cost ? `<span>${cost}</span>` : ''}</div>${it.note ? `<div class="cardnote">${esc(it.note)}</div>` : ''}${bookingHTML(it)}${it.review ? `<div class="cardnote review">💬 ${esc(it.review)}</div>` : ''}${warn ? `<div class="cardnote"><span class="tag warn">注意</span> ${esc(warn.join('；'))}</div>` : ''}</div></div>`;
     });
     if (!info.items.length) cards += `<p class="emptynote">這天還沒有行程，按「＋」新增。</p>`;
     cards += `</div>`;
@@ -729,6 +761,12 @@
         <label>金額狀態<select name="status"><option value="confirmed"${c.status === 'confirmed' ? ' selected' : ''}>已確認</option><option value="estimate"${c.status === 'estimate' ? ' selected' : ''}>估算</option><option value="pending"${c.status === 'pending' ? ' selected' : ''}>待確認</option></select></label>
         <label class="full">備註<textarea name="note" rows="2">${esc(it.note)}</textarea></label>
         <label class="check full"><input type="checkbox" name="locked"${it.locked ? ' checked' : ''}> 已預約・鎖定時段（不可拖移）</label>
+        <div class="full dlgsub">📌 訂位資訊（有訂才填）</div>
+        <label>訂位時間<input type="time" name="bk-time" value="${esc((it.booking || {}).time || '')}"></label>
+        <label>人數<input type="number" name="bk-people" min="1" value="${esc((it.booking || {}).people || '')}"></label>
+        <label>訂位人<input name="bk-name" value="${esc((it.booking || {}).name || '')}"></label>
+        <label>訂位代號<input name="bk-ref" value="${esc((it.booking || {}).ref || '')}"></label>
+        <label class="full">💬 心得（玩完再寫）<textarea name="review" rows="2" placeholder="好吃嗎？下次還來嗎？">${esc(it.review || '')}</textarea></label>
       </div>
       <div class="dlgfoot">${isNew ? '' : '<button type="button" class="btn danger" data-del>刪除</button>'}<button type="button" class="btn" data-close>取消</button><button type="submit" class="btn primary">儲存</button></div></form>`;
     dlg.showModal();
@@ -747,6 +785,9 @@
         cost: (amount === '' && fd.get('status') !== 'pending') ? null : { amount: amount === '' ? null : Number(amount), currency: fd.get('currency'), per: fd.get('per'), status: fd.get('status') },
         note: fd.get('note').trim(), locked: fd.get('locked') === 'on'
       };
+      const bk = { time: fd.get('bk-time'), people: fd.get('bk-people') === '' ? '' : Number(fd.get('bk-people')), name: fd.get('bk-name').trim(), ref: fd.get('bk-ref').trim() };
+      if (bk.time || bk.people || bk.name || bk.ref) upd.booking = bk;
+      const review = fd.get('review').trim(); if (review) upd.review = review;
       dlg.close();
       commit(t => { const i = t.items.findIndex(x => x.id === upd.id); if (i >= 0) t.items[i] = upd; else t.items.push(upd); }, isNew ? `已新增「${upd.title}」` : `已更新「${upd.title}」，相鄰交通已重算`);
       ui.selected = upd.id; const di = trip.days.findIndex(d => d.date === upd.date); if (di !== ui.dayIdx) { ui.dayIdx = di; ui.bounceIdx = di; render(); }
@@ -1051,6 +1092,7 @@
       const body = $('#planbbody'); if (body) body.hidden = !ui.planB[date];
     });
     $('#calendar').addEventListener('click', e => {
+      if (e.target.closest('[data-sos]')) { openEmergency(); return; }
       const b = e.target.closest('[data-delay]'); if (!b) return;
       delayRest(b.dataset.date, Number(b.dataset.delay));
     });
@@ -1074,6 +1116,7 @@
       if (act === 'undo') undo();
       if (act === 'export') exportJSON();
       if (act === 'ics') exportICS();
+      if (act === 'sos') openEmergency();
       if (act === 'spend') { ui.page = 'expenses'; render(); window.scrollTo(0, 0); const a = $('#sp-amount'); if (a) a.focus(); }
       if (act === 'import') $('#importfile').click();
       if (act === 'reset') askConfirm('還原成原始旅程資料？目前的草稿會被取代（可再按復原）。', '還原', () => getJSON(TRIP_FILE).then(o => commit(t => { Object.keys(t).forEach(k => delete t[k]); Object.assign(t, normalize(o)); }, '已還原原始資料')));
@@ -1099,7 +1142,7 @@
     let draft = null;
     try { draft = JSON.parse(localStorage.getItem(STORE_KEY) || 'null'); } catch (e) { draft = null; }
     const fresh = normalize(await getJSON(TRIP_FILE));
-    if (validTrip(draft) && (draft.revision || null) === (fresh.revision || null)) trip = normalize(draft);
+    if (validTrip(draft) && (draft.revision || null) === (fresh.revision || null)) { trip = normalize(draft); if (!trip.emergency && fresh.emergency) trip.emergency = fresh.emergency; }
     else {
       // 資料有新版：舊草稿另存備份，改用新版（避免舊行程蓋掉重排後的行程）
       if (validTrip(draft)) { try { localStorage.setItem(STORE_KEY + ':backup', JSON.stringify(draft)); } catch (e) { /* 略過 */ } ui.newRevision = true; }
