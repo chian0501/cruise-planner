@@ -325,7 +325,7 @@
       delayRest(dt, Number(fd.get('mins')), toMin(fd.get('from')));
     };
   }
-  /* ---------- 離線日文會話小本 ---------- */
+  /* ---------- 離線會話小本（日文岸上、英文船上） ---------- */
   const PHRASES = [
     ['基本', '你好', 'こんにちは', 'konnichiwa'],
     ['基本', '謝謝', 'ありがとうございます', 'arigatō gozaimasu'],
@@ -362,39 +362,83 @@
     ['緊急', '藥局在哪裡？', '薬局はどこですか', 'yakkyoku wa doko desu ka'],
     ['緊急', '我的護照不見了', 'パスポートをなくしました', 'pasupōto o nakushimashita']
   ];
+  // 英文：船上（服務台、餐廳、岸上行程）多用英文
+  const PHRASES_EN = [
+    ['基本', '不好意思，請問一下', 'Excuse me.'],
+    ['基本', '可以說慢一點嗎？', 'Could you speak more slowly, please?'],
+    ['基本', '可以再說一次嗎？', 'Could you say that again, please?'],
+    ['基本', '可以寫下來給我嗎？', 'Could you write it down for me, please?'],
+    ['基本', '我不太會說英文', "My English isn't very good."],
+    ['船上服務', '服務台在幾樓？', 'Which deck is Guest Services on?'],
+    ['船上服務', '我的房卡不見了', 'I lost my cruise card.'],
+    ['船上服務', '我的房卡打不開門', "My cruise card doesn't open my cabin door."],
+    ['船上服務', '房間的冷氣／熱水有問題', "There's a problem with the air conditioning / hot water in my cabin."],
+    ['船上服務', 'Wi-Fi 怎麼買、怎麼連？', 'How do I buy and connect to the Wi-Fi?'],
+    ['船上服務', '我想查一下帳單', "I'd like to check my onboard account, please."],
+    ['船上服務', '今天幾點要回到船上？', 'What time do we need to be back on board today?'],
+    ['船上服務', '明天在哪個樓層下船？', 'Which deck do we disembark from tomorrow?'],
+    ['餐廳', '我們有訂位', 'We have a reservation.'],
+    ['餐廳', '請給我們靠窗的位子', 'Could we have a table by the window, please?'],
+    ['餐廳', '我對這個過敏', "I'm allergic to this."],
+    ['餐廳', '這道菜有放海鮮／堅果嗎？', 'Does this dish contain seafood / nuts?'],
+    ['餐廳', '這個要另外付費嗎？', 'Is this included, or is there an extra charge?'],
+    ['餐廳', '請給我一杯水', 'Could I have a glass of water, please?'],
+    ['餐廳', '請把帳記在我的房間', 'Please charge it to my cabin.'],
+    ['岸上行程', '岸上行程在哪裡集合？', 'Where do we meet for the shore excursion?'],
+    ['岸上行程', '接駁車在哪裡搭？', 'Where do I catch the shuttle bus?'],
+    ['岸上行程', '最後一班接駁車是幾點？', 'What time is the last shuttle back to the ship?'],
+    ['岸上行程', '我們要回郵輪碼頭', 'We need to go back to the cruise terminal.'],
+    ['岸上行程', '我們趕時間，要準時回船', "We're in a hurry. We have to be back on the ship on time."],
+    ['岸上行程', '這附近有廁所嗎？', 'Is there a restroom nearby?'],
+    ['緊急', '請幫幫我', 'Please help me.'],
+    ['緊急', '請叫醫生', 'Please call a doctor.'],
+    ['緊急', '船上醫務室在哪裡？', 'Where is the medical center?'],
+    ['緊急', '我身體不舒服', "I don't feel well."],
+    ['緊急', '我暈船了', "I'm seasick."],
+    ['緊急', '這裡痛', 'It hurts here.'],
+    ['緊急', '我的護照不見了', 'I lost my passport.'],
+    ['緊急', '我和同伴走散了', "I've been separated from my group."]
+  ];
   const canSpeak = () => 'speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined';
-  function speakJa(text) {
+  function speakJa(text, lang) {
+    lang = lang || 'ja-JP';
     if (!canSpeak()) { toast('這台手機不支援朗讀，請直接給對方看'); return; }
     try {
       speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text); u.lang = 'ja-JP'; u.rate = 0.9;
-      const v = speechSynthesis.getVoices().find(x => /^ja/i.test(x.lang)); if (v) u.voice = v;
+      const u = new SpeechSynthesisUtterance(text); u.lang = lang; u.rate = 0.9;
+      const v = speechSynthesis.getVoices().find(x => x.lang.toLowerCase().startsWith(lang.slice(0, 2).toLowerCase())); if (v) u.voice = v;
       speechSynthesis.speak(u);
     } catch (e) { toast('朗讀失敗，請直接給對方看'); }
   }
-  function showBig(ja, zh) {
+  function showBig(ja, zh, lang) {
     const ov = document.createElement('div'); ov.className = 'bigphrase'; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-label', '給對方看');
-    ov.innerHTML = `<div class="bp-ja" lang="ja">${esc(ja)}</div><div class="bp-zh">${esc(zh)}</div><div class="bp-hint">點一下關閉</div>`;
+    ov.innerHTML = `<div class="bp-ja" lang="${lang || 'ja'}">${esc(ja)}</div><div class="bp-zh">${esc(zh)}</div><div class="bp-hint">點一下關閉</div>`;
     ov.onclick = () => ov.remove(); const dlg = document.getElementById('editor'); (dlg && dlg.open ? dlg : document.body).appendChild(ov); // 對話框在最上層，放大頁要放進對話框裡才蓋得住
   }
-  function openPhrases(cat) {
-    const cats = [...new Set(PHRASES.map(x => x[0]))];
-    cat = cat || ui.phraseCat || cats[0]; ui.phraseCat = cat;
+  function openPhrases(cat, lang) {
+    lang = lang || ui.phraseLang || 'ja'; ui.phraseLang = lang;
+    const src = lang === 'en' ? PHRASES_EN : PHRASES;
+    const cats = [...new Set(src.map(x => x[0]))];
+    if (!cats.includes(cat)) cat = cats.includes(ui.phraseCat) ? ui.phraseCat : cats[0];
+    ui.phraseCat = cat;
+    const list = src.filter(x => x[0] === cat);
+    const tag = lang === 'en' ? 'en' : 'ja'; const voice = lang === 'en' ? 'en-US' : 'ja-JP';
     const dlg = $('#editor');
-    dlg.innerHTML = `<form method="dialog" id="phraseform"><div class="dlghead"><h2>🈁 日文會話小本</h2><button type="button" class="iconbtn" data-close aria-label="關閉">✕</button></div>
+    dlg.innerHTML = `<form method="dialog" id="phraseform"><div class="dlghead"><h2>🈁 會話小本</h2><button type="button" class="iconbtn" data-close aria-label="關閉">✕</button></div>
       <div class="dlgbody sosbody">
+        <div class="filterbtns phraselang" role="group" aria-label="語言"><button type="button" data-lang="ja" aria-pressed="${lang === 'ja'}">🇯🇵 日文（岸上）</button><button type="button" data-lang="en" aria-pressed="${lang === 'en'}">🇬🇧 英文（船上）</button></div>
         <div class="filterbtns phrasecats" role="group" aria-label="分類">${cats.map(c => `<button type="button" data-cat="${esc(c)}" aria-pressed="${c === cat}">${esc(c)}</button>`).join('')}</div>
-        <ul class="phraselist">${PHRASES.filter(x => x[0] === cat).map((x, i) => `<li><div class="ph-zh">${esc(x[1])}</div><div class="ph-ja" lang="ja">${esc(x[2])}</div><div class="ph-ro">${esc(x[3])}</div>
+        <ul class="phraselist">${list.map((x, i) => `<li><div class="ph-zh">${esc(x[1])}</div><div class="ph-ja" lang="${tag}">${esc(x[2])}</div>${x[3] ? `<div class="ph-ro">${esc(x[3])}</div>` : ''}
           <div class="ph-btns">${canSpeak() ? `<button type="button" class="btn" data-say="${i}">🔊 唸給他聽</button>` : ''}<button type="button" class="btn" data-big="${i}">🔍 放大給他看</button></div></li>`).join('')}</ul>
-        <p class="sos-src">沒網路也能用。要翻譯任意句子，用 Google 翻譯 App 的日文離線包（看「❓ 怎麼用」）。</p>
+        <p class="sos-src">沒網路也能用。要翻譯任意句子，用 Google 翻譯 App 的離線包（看「❓ 怎麼用」）。</p>
       </div>
       <div class="dlgfoot"><button type="button" class="btn" data-close>關閉</button></div></form>`;
     if (!dlg.open) dlg.showModal();
-    const list = PHRASES.filter(x => x[0] === cat);
     $$('[data-close]', dlg).forEach(b => b.onclick = () => dlg.close());
-    $$('[data-cat]', dlg).forEach(b => b.onclick = () => openPhrases(b.dataset.cat));
-    $$('[data-say]', dlg).forEach(b => b.onclick = () => speakJa(list[+b.dataset.say][2]));
-    $$('[data-big]', dlg).forEach(b => b.onclick = () => { const x = list[+b.dataset.big]; showBig(x[2], x[1]); });
+    $$('[data-lang]', dlg).forEach(b => b.onclick = () => openPhrases(null, b.dataset.lang));
+    $$('[data-cat]', dlg).forEach(b => b.onclick = () => openPhrases(b.dataset.cat, lang));
+    $$('[data-say]', dlg).forEach(b => b.onclick = () => speakJa(list[+b.dataset.say][2], voice));
+    $$('[data-big]', dlg).forEach(b => b.onclick = () => { const x = list[+b.dataset.big]; showBig(x[2], x[1], tag); });
     $('#phraseform').onsubmit = e => e.preventDefault();
   }
   /* ---------- 問 AI：把問題連同今天的狀況帶進自己訂閱的 Claude／ChatGPT ---------- */
@@ -448,9 +492,9 @@
       ['⏩ 行程延誤', '靠港當天，黃色框裡有「順延 15／30 分」。其他時候用港口卡上的「⏩ 順延」，或「☰ 更多」→「順延行程」，可以選從幾點開始、往後推幾分。下船、回港、接駁這些鎖定項目和 All aboard 都不會動，推錯了按「復原」。'],
       ['✏️ 改行程、記訂位', '雙擊（手機點一下）行程卡就能編輯：時間、地址、金額，還有訂位資訊和玩完的心得。改的內容只存在這支手機。'],
       ['🆘 緊急', '底下的「緊急」：119、110、駐那霸辦事處、外交部專線，點了就能撥號。船上醫務室和旅平險號碼拿到後可以自己填進去。'],
-      ['🈁 會話', '常用日文：點餐、搭計程車、退稅、問路、緊急狀況。可以唸出來，或放大給對方看，沒網路也能用。'],
+      ['🈁 會話', '上面可以切日文或英文。日文給岸上用：點餐、搭計程車、退稅、問路、緊急狀況。英文給船上用：服務台、房卡、餐廳過敏、接駁車、醫務室。每句都能唸出來，或放大給對方看，沒網路也能用。'],
       ['🤖 問 AI', '寫下問題，會帶著今天的港口、時間和行程，打開你自己的 Claude 或 ChatGPT 回答。這個要有網路。'],
-      ['📶 出發前準備（在家有網路時做）', '1. 把這個網站加到手機主畫面：iPhone 用 Safari 的「分享」→「加入主畫面」；Android 用 Chrome 右上「⋮」→「加到主畫面」。\n2. 有網路時打開一次，網站會自動存起來，上船沒網路也打得開（天氣、匯率會停在最後一次抓到的）。\n3. 下載 Google 翻譯 App，點右上角頭像 →「已下載的語言」（各版本名稱可能不同），下載「日文」和「中文（繁體）」，沒網路也能翻任意句子、拍菜單翻譯。']
+      ['📶 出發前準備（在家有網路時做）', '1. 把這個網站加到手機主畫面：iPhone 用 Safari 的「分享」→「加入主畫面」；Android 用 Chrome 右上「⋮」→「加到主畫面」。\n2. 有網路時打開一次，網站會自動存起來，上船沒網路也打得開（天氣、匯率會停在最後一次抓到的）。\n3. 下載 Google 翻譯 App，點右上角頭像 →「已下載的語言」（各版本名稱可能不同），下載「日文」「英文」和「中文（繁體）」，沒網路也能翻任意句子、拍菜單翻譯。']
     ];
     dlg.innerHTML = `<form method="dialog" id="guideform"><div class="dlghead"><h2>❓ 怎麼用</h2><button type="button" class="iconbtn" data-close aria-label="關閉">✕</button></div>
       <div class="dlgbody sosbody"><dl class="sostips guide">${items.map(([t, x]) => `<dt>${t}</dt><dd>${esc(x).replace(/\n/g, '<br>')}</dd>`).join('')}</dl></div>
