@@ -92,9 +92,22 @@
   <section id="packingpage" class="page" hidden></section>
 </main>
 
+<nav class="bottomnav" aria-label="主要功能">
+  <button type="button" data-page="plan" aria-current="page"><span aria-hidden="true">🗓️</span>行程</button>
+  <button type="button" data-page="expenses"><span aria-hidden="true">💴</span>費用</button>
+  <button type="button" data-act="phrase"><span aria-hidden="true">🈁</span>會話</button>
+  <button type="button" data-act="ai"><span aria-hidden="true">🤖</span>問 AI</button>
+  <button type="button" data-act="sos" class="bn-sos"><span aria-hidden="true">🆘</span>緊急</button>
+  <button type="button" data-act="more" aria-expanded="false" aria-controls="toolmenu"><span aria-hidden="true">☰</span>更多</button>
+</nav>
 <div class="toolfab">
   <div id="toolmenu" class="toolmenu" role="menu" hidden>
+    <button role="menuitem" data-act="guide">❓ 怎麼用</button>
+    <button role="menuitem" data-act="delay">⏩ 順延行程</button>
     <button role="menuitem" data-act="sos">🆘 緊急聯絡・小知識</button>
+    <button role="menuitem" data-act="phrase">🈁 日文會話小本</button>
+    <button role="menuitem" data-act="ai">🤖 問 AI</button>
+    <button role="menuitem" data-act="packing">🎒 攜帶用品</button>
     <button role="menuitem" data-act="spend">💴 記一筆花費</button>
     <button role="menuitem" data-act="add">＋ 新增行程</button>
     <button role="menuitem" data-act="undo">↶ 復原</button>

@@ -287,19 +287,189 @@
     const btns = canDelay ? `<span class="tb-delay">行程延誤？<button type="button" class="btn" data-delay="15" data-date="${d.date}">順延 15 分</button><button type="button" class="btn" data-delay="30" data-date="${d.date}">順延 30 分</button></span>` : '';
     return `<div class="todaybanner${late ? ' late' : ''}" id="todaybanner" role="status"><span class="tb-label">今天・${esc(d.port)}　All aboard</span><span class="tb-aboard">${d.allAboard}</span><span class="tb-left">${msg}</span>${lines}${btns}</div>`;
   }
-  const shiftable = (i, d, now, lock) => !i.locked && !i.onboard && toMin(i.start) >= now.min && toMin(i.start) < toMin(d.allAboard) && (!lock || toMin(i.start) < toMin(lock.start));
+  const shiftable = (i, d, now, lock) => !i.locked && !i.onboard && toMin(i.start) >= now.min && (!d.allAboard || toMin(i.start) < toMin(d.allAboard)) && (!lock || toMin(i.start) < toMin(lock.start));
   // 一鍵順延：只動「現在之後、下一個鎖定點之前」沒鎖定的行程；鎖定項目（下船、回港、接駁）與 All aboard 不動
-  function delayRest(date, mins) {
-    const d = dayOf(date); const now = nowIn(d.tz);
+  function delayRest(date, mins, fromMin) {
+    const d = dayOf(date); const now = fromMin != null ? { min: fromMin } : nowIn(d.tz);
     const before = computeDay(date);
     const lock = before.items.find(i => i.locked && toMin(i.start) > now.min);
     const ids = before.items.filter(i => shiftable(i, d, now, lock)).map(i => i.id);
-    if (!ids.length) { toast('現在之後沒有可順延的行程'); return; }
+    if (!ids.length) { toast(fromMin != null ? (lock ? `${fmt(fromMin)} 之後先遇到鎖定的「${lock.title}」，它之後的行程不會被推；請改從 ${fmt(endMin(lock))} 之後開始` : `${fmt(fromMin)} 之後沒有可順延的行程（鎖定、船上活動不動）`) : '現在之後沒有可順延的行程'); return; }
     commit(t => { t.items.forEach(i => { if (ids.includes(i.id)) i.start = fmt(toMin(i.start) + mins); }); });
     const after = computeDay(date);
     const wn = (w, id) => (w[id] || []).length;
     const hit = ids.concat(lock ? [lock.id] : []).filter(id => wn(after.warns, id) > wn(before.warns, id));
+    if (ui.page !== 'plan') { ui.page = 'plan'; render(); }
     toast(hit.length ? `已順延 ${ids.length} 項 ${mins} 分；會趕不上固定行程，建議縮短或刪一站（可按復原）` : `已順延 ${ids.length} 項 ${mins} 分，回港與接駁時間沒動（可按復原）`);
+  }
+  function openDelayDialog(date) {
+    date = date || trip.days[ui.dayIdx].date;
+    const d0 = dayOf(date); const now0 = nowIn(d0.tz);
+    const first = itemsOn(date).find(i => !i.locked && !i.onboard);
+    const from0 = now0.date === date ? fmt(now0.min) : (first ? first.start : '09:00');
+    const dlg = $('#editor');
+    dlg.innerHTML = `<form method="dialog" id="delayform"><div class="dlghead"><h2>⏩ 順延行程</h2><button type="button" class="iconbtn" data-close aria-label="關閉">✕</button></div>
+      <div class="dlgbody">
+        <p class="full dlghint">玩太久、排隊太久？把某個時間之後的行程一起往後推。下船、回港、接駁這些鎖定項目，還有 All aboard 都不會動。</p>
+        <label>哪一天<select name="date">${trip.days.map(d => `<option value="${d.date}"${d.date === date ? ' selected' : ''}>${dateLabel(d.date).md} ${esc(d.port)}</option>`).join('')}</select></label>
+        <label>從幾點開始（當地）<input type="time" name="from" required value="${from0}"></label>
+        <div class="full delaypick" role="group" aria-label="往後推幾分">${[15, 30, 45, 60].map(m => `<label class="pickbtn"><input type="radio" name="mins" value="${m}"${m === 30 ? ' checked' : ''}><span>${m} 分</span></label>`).join('')}</div>
+      </div>
+      <div class="dlgfoot"><button type="button" class="btn" data-close>取消</button><button type="submit" class="btn primary">順延</button></div></form>`;
+    dlg.showModal();
+    $$('[data-close]', dlg).forEach(b => b.onclick = () => dlg.close());
+    $('#delayform').onsubmit = e => {
+      e.preventDefault(); const fd = new FormData(e.target); dlg.close();
+      const dt = fd.get('date'); const di = trip.days.findIndex(x => x.date === dt);
+      if (di !== ui.dayIdx) { ui.dayIdx = di; ui.view = 'day'; }
+      delayRest(dt, Number(fd.get('mins')), toMin(fd.get('from')));
+    };
+  }
+  /* ---------- 離線日文會話小本 ---------- */
+  const PHRASES = [
+    ['基本', '你好', 'こんにちは', 'konnichiwa'],
+    ['基本', '謝謝', 'ありがとうございます', 'arigatō gozaimasu'],
+    ['基本', '不好意思／請問一下', 'すみません', 'sumimasen'],
+    ['基本', '我不會說日文', '日本語が話せません', 'nihongo ga hanasemasen'],
+    ['基本', '可以說慢一點嗎？', 'ゆっくり話していただけますか', 'yukkuri hanashite itadakemasu ka'],
+    ['基本', '這個多少錢？', 'これはいくらですか', 'kore wa ikura desu ka'],
+    ['點餐', '請問有空位嗎？', '席は空いていますか', 'seki wa aite imasu ka'],
+    ['點餐', '請給我菜單', 'メニューをください', 'menyū o kudasai'],
+    ['點餐', '有中文菜單嗎？', '中国語のメニューはありますか', 'chūgokugo no menyū wa arimasu ka'],
+    ['點餐', '我要這個', 'これをください', 'kore o kudasai'],
+    ['點餐', '要等多久？', 'どのくらい待ちますか', 'dono kurai machimasu ka'],
+    ['點餐', '請結帳', 'お会計をお願いします', 'okaikei o onegai shimasu'],
+    ['點餐', '可以刷卡嗎？', 'カードは使えますか', 'kādo wa tsukaemasu ka'],
+    ['交通', '請載我到這裡（給司機看地址）', 'ここまでお願いします', 'koko made onegai shimasu'],
+    ['交通', '請載我到郵輪碼頭', 'クルーズターミナルまでお願いします', 'kurūzu tāminaru made onegai shimasu'],
+    ['交通', '大概要多久？', 'どのくらいかかりますか', 'dono kurai kakarimasu ka'],
+    ['交通', '我們趕時間，要準時回船', '急いでいます。船に戻らなければなりません', 'isoide imasu. fune ni modoranakereba narimasen'],
+    ['交通', '請在這裡停', 'ここで止めてください', 'koko de tomete kudasai'],
+    ['交通', '公車站在哪裡？', 'バス停はどこですか', 'basutei wa doko desu ka'],
+    ['購物', '可以免稅嗎？', '免税できますか', 'menzei dekimasu ka'],
+    ['購物', '這是護照', 'パスポートです', 'pasupōto desu'],
+    ['購物', '可以試穿嗎？', '試着してもいいですか', 'shichaku shitemo ii desu ka'],
+    ['購物', '請給我袋子', '袋をください', 'fukuro o kudasai'],
+    ['問路', '廁所在哪裡？', 'トイレはどこですか', 'toire wa doko desu ka'],
+    ['問路', '走路到得了嗎？', '歩いて行けますか', 'aruite ikemasu ka'],
+    ['問路', '可以幫我們拍照嗎？', '写真を撮っていただけますか', 'shashin o totte itadakemasu ka'],
+    ['緊急', '請幫幫我', '助けてください', 'tasukete kudasai'],
+    ['緊急', '請叫救護車', '救急車を呼んでください', 'kyūkyūsha o yonde kudasai'],
+    ['緊急', '請報警', '警察を呼んでください', 'keisatsu o yonde kudasai'],
+    ['緊急', '我身體不舒服', '気分が悪いです', 'kibun ga warui desu'],
+    ['緊急', '這裡痛', 'ここが痛いです', 'koko ga itai desu'],
+    ['緊急', '附近有醫院嗎？', '近くに病院はありますか', 'chikaku ni byōin wa arimasu ka'],
+    ['緊急', '藥局在哪裡？', '薬局はどこですか', 'yakkyoku wa doko desu ka'],
+    ['緊急', '我的護照不見了', 'パスポートをなくしました', 'pasupōto o nakushimashita']
+  ];
+  const canSpeak = () => 'speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined';
+  function speakJa(text) {
+    if (!canSpeak()) { toast('這台手機不支援朗讀，請直接給對方看'); return; }
+    try {
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text); u.lang = 'ja-JP'; u.rate = 0.9;
+      const v = speechSynthesis.getVoices().find(x => /^ja/i.test(x.lang)); if (v) u.voice = v;
+      speechSynthesis.speak(u);
+    } catch (e) { toast('朗讀失敗，請直接給對方看'); }
+  }
+  function showBig(ja, zh) {
+    const ov = document.createElement('div'); ov.className = 'bigphrase'; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-label', '給對方看');
+    ov.innerHTML = `<div class="bp-ja" lang="ja">${esc(ja)}</div><div class="bp-zh">${esc(zh)}</div><div class="bp-hint">點一下關閉</div>`;
+    ov.onclick = () => ov.remove(); const dlg = document.getElementById('editor'); (dlg && dlg.open ? dlg : document.body).appendChild(ov); // 對話框在最上層，放大頁要放進對話框裡才蓋得住
+  }
+  function openPhrases(cat) {
+    const cats = [...new Set(PHRASES.map(x => x[0]))];
+    cat = cat || ui.phraseCat || cats[0]; ui.phraseCat = cat;
+    const dlg = $('#editor');
+    dlg.innerHTML = `<form method="dialog" id="phraseform"><div class="dlghead"><h2>🈁 日文會話小本</h2><button type="button" class="iconbtn" data-close aria-label="關閉">✕</button></div>
+      <div class="dlgbody sosbody">
+        <div class="filterbtns phrasecats" role="group" aria-label="分類">${cats.map(c => `<button type="button" data-cat="${esc(c)}" aria-pressed="${c === cat}">${esc(c)}</button>`).join('')}</div>
+        <ul class="phraselist">${PHRASES.filter(x => x[0] === cat).map((x, i) => `<li><div class="ph-zh">${esc(x[1])}</div><div class="ph-ja" lang="ja">${esc(x[2])}</div><div class="ph-ro">${esc(x[3])}</div>
+          <div class="ph-btns">${canSpeak() ? `<button type="button" class="btn" data-say="${i}">🔊 唸給他聽</button>` : ''}<button type="button" class="btn" data-big="${i}">🔍 放大給他看</button></div></li>`).join('')}</ul>
+        <p class="sos-src">沒網路也能用。要翻譯任意句子，用 Google 翻譯 App 的日文離線包（看「❓ 怎麼用」）。</p>
+      </div>
+      <div class="dlgfoot"><button type="button" class="btn" data-close>關閉</button></div></form>`;
+    if (!dlg.open) dlg.showModal();
+    const list = PHRASES.filter(x => x[0] === cat);
+    $$('[data-close]', dlg).forEach(b => b.onclick = () => dlg.close());
+    $$('[data-cat]', dlg).forEach(b => b.onclick = () => openPhrases(b.dataset.cat));
+    $$('[data-say]', dlg).forEach(b => b.onclick = () => speakJa(list[+b.dataset.say][2]));
+    $$('[data-big]', dlg).forEach(b => b.onclick = () => { const x = list[+b.dataset.big]; showBig(x[2], x[1]); });
+    $('#phraseform').onsubmit = e => e.preventDefault();
+  }
+  /* ---------- 問 AI：把問題連同今天的狀況帶進自己訂閱的 Claude／ChatGPT ---------- */
+  function aiContext() {
+    const d = trip.days.find(x => nowIn(x.tz).date === x.date) || trip.days[ui.dayIdx];
+    const now = nowIn(d.tz); const today = now.date === d.date;
+    const typ = { embark: '登船日', disembark: '下船日', port: '靠港日', sea: '海上航行日' }[d.portType] || '';
+    const next = itemsOn(d.date).filter(i => !today || endMin(i) > now.min).slice(0, 4).map(i => `${i.start} ${i.title}`);
+    let c = `我正在搭郵輪旅行（${trip.name}）。${today ? '今天' : '我問的是'} ${d.date}（${typ}），在${d.port}，用${tzShort(d.tz)}`;
+    if (today) c += `，現在當地時間 ${fmt(now.min)}`;
+    c += '。';
+    if (d.allAboard) c += `All aboard（最晚回船）是 ${d.allAboard}。`;
+    if (next.length) c += `${today ? '接下來' : '這天'}的行程：${next.join('；')}。`;
+    return c;
+  }
+  function openAI() {
+    const dlg = $('#editor');
+    const chips = ['突然下雨，接下來怎麼改？', '附近有什麼在地小吃？', '幫我把這句翻成日文：', '來得及在 All aboard 前回船嗎？'];
+    dlg.innerHTML = `<form method="dialog" id="aiform"><div class="dlghead"><h2>🤖 問 AI</h2><button type="button" class="iconbtn" data-close aria-label="關閉">✕</button></div>
+      <div class="dlgbody">
+        <p class="full dlghint">寫下問題，按下面的按鈕，會開啟你自己訂閱的 Claude 或 ChatGPT 並帶入問題（需要網路，用你自己的帳號）。</p>
+        <div class="full aichips">${chips.map(c => `<button type="button" class="pickchip" data-chip="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+        <label class="full">你的問題<textarea name="q" rows="3" required placeholder="例如：首里城附近午餐吃什麼？"></textarea></label>
+        <label class="check full"><input type="checkbox" name="ctx" checked> 一起附上今天的港口、時間和行程（不含姓名、房號）</label>
+        <details class="full aiprev"><summary>看會附上什麼</summary><p>${esc(aiContext())}</p></details>
+      </div>
+      <div class="dlgfoot aifoot"><button type="button" class="btn" data-ai="copy">📋 只複製</button><button type="button" class="btn primary" data-ai="chatgpt">ChatGPT 問</button><button type="button" class="btn primary" data-ai="claude">Claude 問</button></div></form>`;
+    dlg.showModal();
+    const f = $('#aiform');
+    $$('[data-close]', dlg).forEach(b => b.onclick = () => dlg.close());
+    $$('[data-chip]', dlg).forEach(b => b.onclick = () => { f.q.value = b.dataset.chip; f.q.focus(); });
+    f.onsubmit = e => e.preventDefault();
+    $$('[data-ai]', dlg).forEach(b => b.onclick = () => {
+      const q = f.q.value.trim(); if (!q) { toast('先寫下問題'); f.q.focus(); return; }
+      const text = (f.ctx.checked ? aiContext() + '\n\n' : '') + '問題：' + q + '\n\n請用繁體中文，先給結論，簡短回答。';
+      const copy = () => { try { navigator.clipboard.writeText(text).catch(() => {}); } catch (err) { /* 不支援就略過 */ } };
+      copy();
+      if (b.dataset.ai === 'copy') { toast('已複製問題，貼到任何 AI 都可以'); return; }
+      if (navigator.onLine === false) { toast('現在沒有網路；問題已複製，有網路再貼給 AI'); return; }
+      const url = b.dataset.ai === 'claude' ? 'https://claude.ai/new?q=' + encodeURIComponent(text) : 'https://chatgpt.com/?q=' + encodeURIComponent(text);
+      window.open(url, '_blank', 'noopener'); dlg.close();
+      toast('已開啟並帶入問題（也複製了一份，沒帶進去就直接貼上）');
+    });
+  }
+  /* ---------- 怎麼用（第一次打開自動出現） ---------- */
+  const GUIDE_KEY = 'cruise-planner-guide-v1';
+  function openGuide() {
+    const dlg = $('#editor');
+    const items = [
+      ['🗓️ 每天看什麼', '「行程」頁上面點日期，就換到那一天。「週」可以看整趟，「單日」是一張張行程卡。靠港那天打開，會直接顯示今天的港口，最上面的黃色框會倒數 All aboard，提醒你最晚幾點要出發回船。'],
+      ['⏩ 行程延誤', '靠港當天，黃色框裡有「順延 15／30 分」。其他時候用港口卡上的「⏩ 順延」，或「☰ 更多」→「順延行程」，可以選從幾點開始、往後推幾分。下船、回港、接駁這些鎖定項目和 All aboard 都不會動，推錯了按「復原」。'],
+      ['✏️ 改行程、記訂位', '雙擊（手機點一下）行程卡就能編輯：時間、地址、金額，還有訂位資訊和玩完的心得。改的內容只存在這支手機。'],
+      ['🆘 緊急', '底下的「緊急」：119、110、駐那霸辦事處、外交部專線，點了就能撥號。船上醫務室和旅平險號碼拿到後可以自己填進去。'],
+      ['🈁 會話', '常用日文：點餐、搭計程車、退稅、問路、緊急狀況。可以唸出來，或放大給對方看，沒網路也能用。'],
+      ['🤖 問 AI', '寫下問題，會帶著今天的港口、時間和行程，打開你自己的 Claude 或 ChatGPT 回答。這個要有網路。'],
+      ['📶 出發前準備（在家有網路時做）', '1. 把這個網站加到手機主畫面：iPhone 用 Safari 的「分享」→「加入主畫面」；Android 用 Chrome 右上「⋮」→「加到主畫面」。\n2. 有網路時打開一次，網站會自動存起來，上船沒網路也打得開（天氣、匯率會停在最後一次抓到的）。\n3. 下載 Google 翻譯 App，點右上角頭像 →「已下載的語言」（各版本名稱可能不同），下載「日文」和「中文（繁體）」，沒網路也能翻任意句子、拍菜單翻譯。']
+    ];
+    dlg.innerHTML = `<form method="dialog" id="guideform"><div class="dlghead"><h2>❓ 怎麼用</h2><button type="button" class="iconbtn" data-close aria-label="關閉">✕</button></div>
+      <div class="dlgbody sosbody"><dl class="sostips guide">${items.map(([t, x]) => `<dt>${t}</dt><dd>${esc(x).replace(/\n/g, '<br>')}</dd>`).join('')}</dl></div>
+      <div class="dlgfoot"><button type="submit" class="btn primary">知道了</button></div></form>`;
+    dlg.showModal();
+    const done = () => { try { localStorage.setItem(GUIDE_KEY, '1'); } catch (e) { /* 略過 */ } dlg.close(); };
+    $$('[data-close]', dlg).forEach(b => b.onclick = done);
+    $('#guideform').onsubmit = e => { e.preventDefault(); done(); };
+    dlg.addEventListener('close', () => { try { localStorage.setItem(GUIDE_KEY, '1'); } catch (e) { /* 略過 */ } }, { once: true });
+  }
+  function runAct(act) {
+    if (act === 'sos') openEmergency();
+    else if (act === 'phrase') openPhrases();
+    else if (act === 'ai') openAI();
+    else if (act === 'guide') openGuide();
+    else if (act === 'delay') openDelayDialog();
+    else if (act === 'packing') { ui.page = 'packing'; render(); window.scrollTo(0, 0); }
+    else return false;
+    return true;
   }
   /* ---------- 天氣（Open-Meteo，免金鑰；預報只到 16 天內） ---------- */
   const WX_KEY = 'cruise-planner-wx-v1';
@@ -420,6 +590,7 @@
     if (d.safeReturn) intro += `<span class="portchip">安全回船線 ${d.safeReturn}</span>`;
     intro += wxChip(d);
     if (trip.emergency) intro += `<button type="button" class="portchip sos" data-sos>🆘 緊急聯絡</button>`;
+    if (info.items.some(i => !i.locked && !i.onboard)) intro += `<button type="button" class="portchip delaychip" data-delaydlg="${d.date}">⏩ 順延</button>`;
     intro += `</div>`;
     if (d.portType === 'port' && d.arrive && (d.safeReturn || d.allAboard)) {
       const shore = toMin(d.safeReturn || d.allAboard) - toMin(d.arrive);
@@ -1072,6 +1243,7 @@
     hidePopover();
     renderHeader();
     $$('.tabs button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.page === ui.page)));
+    $$('.bottomnav [data-page]').forEach(b => { if (b.dataset.page === ui.page) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); });
     $('#planpage').hidden = ui.page !== 'plan'; $('#expensespage').hidden = ui.page !== 'expenses'; $('#packingpage').hidden = ui.page !== 'packing';
     if (ui.page === 'plan') renderPlan(); else if (ui.page === 'expenses') renderExpenses(); else renderPacking();
   }
@@ -1093,8 +1265,14 @@
     });
     $('#calendar').addEventListener('click', e => {
       if (e.target.closest('[data-sos]')) { openEmergency(); return; }
+      const dd = e.target.closest('[data-delaydlg]'); if (dd) { openDelayDialog(dd.dataset.delaydlg); return; }
       const b = e.target.closest('[data-delay]'); if (!b) return;
       delayRest(b.dataset.date, Number(b.dataset.delay));
+    });
+    $$('.bottomnav button').forEach(b => b.onclick = () => {
+      if (b.dataset.page) { ui.page = b.dataset.page; render(); window.scrollTo(0, 0); if (ui.page === 'plan' && map) setTimeout(() => map.invalidateSize(), 60); return; }
+      if (b.dataset.act === 'more') { const open = tm.hidden; tm.hidden = !open; b.setAttribute('aria-expanded', String(open)); tb.setAttribute('aria-expanded', String(open)); return; }
+      closeMenu(); runAct(b.dataset.act);
     });
     $('#undo').onclick = undo;
     $('#addplace').onclick = () => openItemEditor(null);
@@ -1102,7 +1280,7 @@
     $('#fit').onclick = () => { ui.mapMode = 'fit'; renderMap(); };
     $('#voyage').onclick = () => { ui.mapMode = 'voyage'; renderMap(); };
     const tb = $('#toolbtn'), tm = $('#toolmenu');
-    const closeMenu = () => { tm.hidden = true; tb.setAttribute('aria-expanded', 'false'); };
+    const closeMenu = () => { tm.hidden = true; tb.setAttribute('aria-expanded', 'false'); const mb = $('.bottomnav [data-act="more"]'); if (mb) mb.setAttribute('aria-expanded', 'false'); };
     tb.onclick = () => { const open = tm.hidden; tm.hidden = !open; tb.setAttribute('aria-expanded', String(open)); if (open) $('button', tm).focus(); };
     tm.addEventListener('keydown', e => {
       const items = $$('button', tm); const i = items.indexOf(document.activeElement);
@@ -1116,12 +1294,12 @@
       if (act === 'undo') undo();
       if (act === 'export') exportJSON();
       if (act === 'ics') exportICS();
-      if (act === 'sos') openEmergency();
+      if (runAct(act)) return;
       if (act === 'spend') { ui.page = 'expenses'; render(); window.scrollTo(0, 0); const a = $('#sp-amount'); if (a) a.focus(); }
       if (act === 'import') $('#importfile').click();
       if (act === 'reset') askConfirm('還原成原始旅程資料？目前的草稿會被取代（可再按復原）。', '還原', () => getJSON(TRIP_FILE).then(o => commit(t => { Object.keys(t).forEach(k => delete t[k]); Object.assign(t, normalize(o)); }, '已還原原始資料')));
     };
-    document.addEventListener('click', e => { if (!e.target.closest('.toolfab')) closeMenu(); if (!e.target.closest('#popover') && !e.target.closest('.ev') && !e.target.closest('.timeline-card')) hidePopover(); });
+    document.addEventListener('click', e => { if (!e.target.closest('.toolfab, [data-act="more"]')) closeMenu(); if (!e.target.closest('#popover') && !e.target.closest('.ev') && !e.target.closest('.timeline-card')) hidePopover(); });
     document.addEventListener('keydown', e => { if (e.key === 'Escape') hidePopover(); if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.target.closest('input,textarea')) { e.preventDefault(); undo(); } });
     $('#importfile').onchange = e => {
       const f = e.target.files[0]; if (!f) return;
@@ -1165,6 +1343,9 @@
     sw.innerHTML = trips.map(t => `<option value="${esc(t.id)}"${t.id === entry.id ? ' selected' : ''}>${esc(t.name)}</option>`).join('');
     sw.onchange = async () => { const en = trips.find(t => t.id === sw.value); try { await loadTrip(en); wxData = {}; render(); refreshFx(); refreshWeather(); toast('已切換到 ' + en.name); } catch (e) { toast('讀不到這趟旅程的資料'); } };
     bindStatic(); render(); refreshFx(); refreshWeather();
+    let seen = true; try { seen = !!localStorage.getItem(GUIDE_KEY); } catch (e) { seen = true; }
+    if (!seen && !NOW_AT) openGuide();
+    if (!EMBED && 'serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('sw.js').catch(() => { /* 離線快取失敗不影響使用 */ });
     if (ui.newRevision) { ui.newRevision = false; toast('行程已更新成新版；你之前的修改備份在這台裝置（瀏覽器草稿）'); }
     window.__cruise = { get trip() { return trip; }, ui, computeDay, expenseLines, zonedToUtc };
   }
