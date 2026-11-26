@@ -442,3 +442,6 @@ dialog::backdrop { background: rgba(62,58,57,.35); }
   .toolmenu button { min-height: 44px; }
   .dlgfoot .btn { min-height: 44px; }
 }
+
+.phraselang { display: flex; gap: 6px; margin-bottom: 8px; }
+.phraselang button { flex: 1; min-height: 44px; font-weight: 700; }
