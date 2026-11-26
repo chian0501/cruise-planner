@@ -341,6 +341,14 @@ dialog::backdrop { background: rgba(62,58,57,.35); }
 .todaybanner .tb-aboard { font-size: 1.7rem; line-height: 1.1; font-weight: 700; font-variant-numeric: tabular-nums; }
 .todaybanner .tb-left { font-size: .95rem; }
 .todaybanner.late { background: var(--now); color: #fff; border-color: var(--now); }
+.todaybanner .tb-line { flex-basis: 100%; font-size: .92rem; line-height: 1.45; }
+.todaybanner .tb-latest b { font-size: 1.1rem; font-variant-numeric: tabular-nums; }
+.todaybanner .tb-delay { flex-basis: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: .9rem; }
+.todaybanner .tb-delay .btn { min-height: 40px; padding: 6px 14px; color: #3E3A39; font-size: .9rem; }
+.portchip.wx { background: var(--paper); }
+.datestation .dwx { font-size: .72rem; line-height: 1; font-variant-numeric: tabular-nums; }
+.checkline { display: flex; align-items: center; gap: 8px; }
+.checkline input { width: auto; }
 .planb { border: 2px dashed var(--ink); border-radius: var(--radius-sm); padding: 8px 12px; background: var(--surface); }
 .planb > button { border: 2px solid var(--ink); border-radius: 999px; background: var(--surface); padding: 3px 14px; font-size: .9rem; }
 .planb > button[aria-pressed="true"] { background: var(--stay); color: #3E3A39; }
@@ -373,3 +381,20 @@ dialog::backdrop { background: rgba(62,58,57,.35); }
   :root:not([data-theme="light"]) #map.landmap { background: #27414d; }
   :root:not([data-theme="light"]) .leaflet-tile-pane { filter: brightness(.7) contrast(1.05) saturate(.8); }
 }
+
+/* 緊急聯絡、訂位、心得（2026-11-25） */
+.portchip.sos { background: #fff; border-color: var(--now); color: var(--now); font-weight: 700; cursor: pointer; }
+.dlgsub { font-size: .85rem; font-weight: 700; margin-top: 4px; }
+.cardnote.booking { font-weight: 700; }
+.cardnote.review { border-left: 3px solid var(--ink); padding-left: 6px; }
+.sosbody { display: block; }
+.soslist { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.soslist li { border: 2px solid var(--ink); border-radius: 10px; padding: 8px 10px; background: var(--surface); display: grid; gap: 4px; }
+.soslist li.pend { border-style: dashed; }
+.sos-label { font-weight: 700; font-size: .92rem; }
+.sos-call { font-size: 1.25rem; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--now); text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; }
+.sos-intl, .sos-note, .sos-src { font-size: .8rem; color: var(--muted); }
+.sos-h { margin: 14px 0 6px; font-size: 1rem; }
+.sostips { margin: 0; display: grid; gap: 6px; }
+.sostips dt { font-weight: 700; font-size: .9rem; }
+.sostips dd { margin: 0 0 4px; font-size: .88rem; line-height: 1.5; }
