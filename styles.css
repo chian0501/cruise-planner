@@ -398,3 +398,47 @@ dialog::backdrop { background: rgba(62,58,57,.35); }
 .sostips { margin: 0; display: grid; gap: 6px; }
 .sostips dt { font-weight: 700; font-size: .9rem; }
 .sostips dd { margin: 0 0 4px; font-size: .88rem; line-height: 1.5; }
+
+/* 手機導覽、順延、會話、問 AI、怎麼用（2026-11-26） */
+.bottomnav { display: none; }
+.dlghint { margin: 0; font-size: .88rem; line-height: 1.5; }
+.portchip.delaychip { background: var(--surface); cursor: pointer; font-weight: 700; }
+.delaypick { display: flex; gap: 8px; flex-wrap: wrap; }
+.dlgbody .pickbtn { display: block; }
+.pickbtn input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.pickbtn span { display: inline-flex; align-items: center; justify-content: center; min-width: 64px; min-height: 44px; border: 2px solid var(--ink); border-radius: 999px; padding: 0 14px; background: var(--surface); }
+.pickbtn input:checked + span { background: var(--transport); font-weight: 700; }
+.pickbtn input:focus-visible + span { outline: 3px solid var(--now); outline-offset: 2px; }
+.phrasecats { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.phrasecats button { min-height: 40px; }
+.phraselist { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.phraselist li { border: 2px solid var(--ink); border-radius: 10px; padding: 8px 10px; background: var(--surface); display: grid; gap: 3px; }
+.ph-zh { font-size: .85rem; color: var(--muted); }
+.ph-ja { font-size: 1.25rem; font-weight: 700; line-height: 1.4; }
+.ph-ro { font-size: .8rem; color: var(--muted); }
+.ph-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+.ph-btns .btn { min-height: 40px; font-size: .88rem; }
+.bigphrase { position: fixed; inset: 0; z-index: 3000; background: #FFFCF6; color: #3E3A39; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 24px; text-align: center; }
+.bp-ja { font-size: clamp(2rem, 9vw, 3.6rem); font-weight: 700; line-height: 1.35; }
+.bp-zh { font-size: 1.1rem; }
+.bp-hint { font-size: .85rem; opacity: .7; }
+.aichips { display: flex; gap: 6px; flex-wrap: wrap; }
+.pickchip { border: 2px solid var(--ink); border-radius: 999px; background: var(--surface); padding: 6px 12px; min-height: 40px; font-size: .85rem; }
+.aiprev { font-size: .82rem; color: var(--muted); }
+.aiprev p { margin: 6px 0 0; line-height: 1.5; }
+.aifoot { flex-wrap: wrap; }
+.sostips.guide dd { white-space: normal; }
+@media (max-width: 600px) {
+  .tabs { display: none; }
+  body { padding-bottom: calc(150px + env(safe-area-inset-bottom)); }
+  .bottomnav { display: grid; grid-template-columns: repeat(6, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 1100; background: var(--card); border-top: var(--line); padding: 4px 4px calc(4px + env(safe-area-inset-bottom)); }
+  .bottomnav button { background: none; border: 0; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; min-height: 54px; font-size: .74rem; padding: 2px 0; }
+  .bottomnav button span { font-size: 1.35rem; line-height: 1.1; }
+  .bottomnav button[aria-current="page"], .bottomnav button[aria-expanded="true"] { background: var(--transport); color: #3E3A39; font-weight: 700; }
+  .bottomnav .bn-sos { color: var(--now); font-weight: 700; }
+  #toolbtn { display: none; }
+  .toolfab { left: auto; right: 10px; transform: none; bottom: calc(70px + env(safe-area-inset-bottom)); align-items: flex-end; }
+  .toolmenu { max-height: 60vh; overflow: auto; }
+  .toolmenu button { min-height: 44px; }
+  .dlgfoot .btn { min-height: 44px; }
+}
