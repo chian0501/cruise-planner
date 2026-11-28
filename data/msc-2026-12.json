@@ -390,7 +390,7 @@
           "url": "https://aeon-ryukyu.jp/store/maxvalu/miyakominami"
         },
         {
-          "label": "永旺官方地圖",
+          "label": "Google 地圖（永旺店鋪）",
           "url": "https://maps.app.goo.gl/4kQebTTgDxCyWZwN6"
         }
       ],
@@ -524,7 +524,7 @@
       "cost": null,
       "note": "【已查證】MSC Bellissima 2023 年起用新港ふ頭第2クルーズバース；候船處離船約 1 km，大型船靠港曾出現計程車長排。07:00 靠岸，08:30 下船。共乘計程車、不包車；船方最終泊位公告為準。",
       "locked": true,
-      "mapQuery": "那覇港 新港ふ頭 第2クルーズバース 12号岸壁 那覇市 沖縄県 日本",
+      "mapQuery": "那覇港 新港ふ頭 那覇市 沖縄県 日本",
       "links": []
     },
     {
@@ -759,7 +759,7 @@
       "locked": true,
       "lat": 26.2415,
       "lng": 127.6775,
-      "mapQuery": "那覇港 新港ふ頭 第2クルーズバース 12号岸壁 那覇市 沖縄県 日本",
+      "mapQuery": "那覇港 新港ふ頭 那覇市 沖縄県 日本",
       "links": []
     },
     {
