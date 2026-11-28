@@ -376,7 +376,7 @@
         "per": "group",
         "status": "pending"
       },
-      "note": "會員權益：Thermal 本人 1 小時、18+、需預約、不可轉讓；時段依預約與日報，設施開放不保證",
+      "note": "會員權益：Thermal 1 小時、18+、需預約、不可轉讓；時段依預約與日報，設施開放不保證",
       "locked": false,
       "onboard": true
     },
@@ -999,6 +999,16 @@
         "per": "vehicle",
         "status": "estimate"
       }
+    },
+    "m-1211-c>m-1211-e": {
+      "mode": "taxi",
+      "minutes": 30,
+      "cost": null
+    },
+    "m-1211-q>m-1211-g": {
+      "mode": "taxi",
+      "minutes": 15,
+      "cost": null
     }
   },
   "packingGroups": [
