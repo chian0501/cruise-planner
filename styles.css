@@ -445,3 +445,14 @@ dialog::backdrop { background: rgba(62,58,57,.35); }
 
 .phraselang { display: flex; gap: 6px; margin-bottom: 8px; }
 .phraselang button { flex: 1; min-height: 44px; font-weight: 700; }
+
+/* MSC 景點攻略與導航 */
+.spot-guide { margin-top: 8px; }
+.spot-guide-text { font-size: .86rem; line-height: 1.55; color: var(--muted); overflow-wrap: anywhere; }
+.spotlinks { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
+.spotlink { display: inline-flex; align-items: center; justify-content: center; min-height: 36px; padding: 5px 10px; border: 1px solid var(--ink); border-radius: 10px; background: var(--surface); color: var(--ink); font-size: .82rem; font-weight: 650; line-height: 1.3; text-decoration: none; text-align: left; overflow-wrap: anywhere; }
+.spotlink:hover, .spotlink:focus-visible { text-decoration: underline; outline-offset: 2px; }
+.day-guide { margin: 10px 0; padding: 10px 12px; border: var(--line); background: var(--card); border-radius: 12px; }
+.day-guide .spot-guide-text { margin-top: 7px; }
+@media (max-width: 600px) { .spotlink { min-height: 44px; } }
+

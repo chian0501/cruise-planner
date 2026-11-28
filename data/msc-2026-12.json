@@ -69,7 +69,15 @@
             "text": "叫車回船，目標 15:00 前上船；不再塞偏遠景點"
           }
         ]
-      }
+      },
+      "routeIds": [
+        "m-1209-b",
+        "m-1209-c",
+        "m-1209-d",
+        "m-1209-e",
+        "m-1209-f",
+        "m-1209-g"
+      ]
     },
     {
       "date": "2026-12-10",
@@ -104,7 +112,13 @@
             "text": "結帳登錄後叫車回港，目標 17:00 前上船"
           }
         ]
-      }
+      },
+      "routeIds": [
+        "m-1210-b",
+        "m-1210-c",
+        "m-1210-d",
+        "m-1210-g"
+      ]
     },
     {
       "date": "2026-12-11",
@@ -139,7 +153,13 @@
             "text": "下午船上休息、設施"
           }
         ]
-      }
+      },
+      "routeIds": [
+        "m-1211-c",
+        "m-1211-d",
+        "m-1211-f",
+        "m-1211-g"
+      ]
     },
     {
       "date": "2026-12-12",
@@ -271,7 +291,9 @@
       "lng": 125.278,
       "cost": null,
       "note": "08:00 靠岸；09:00–09:30 依船方指定批次辦入境，截止與批次待 D1 確認。共乘計程車、不包車，出發前先電話或 App 預約。【待查】泊位（下崎或漲水）以 The Daily 為準。",
-      "locked": true
+      "locked": true,
+      "mapQuery": "平良港 国際クルーズターミナル 宮古島市 沖縄県 日本",
+      "links": []
     },
     {
       "id": "m-1209-c",
@@ -282,8 +304,18 @@
       "title": "トゥリバーサンセットビーチ（Twuriba 海濱公園）看伊良部大橋",
       "address": "平良久貝550-6（以地址導航）",
       "cost": null,
-      "note": "【官方】由平良港約 5 分車程，實際郵輪岸壁與候車另計。10:30 左右看伊良部大橋全景，不跨橋（跨橋、Painagama、海之驛僅備案）。座標未取得，以地址導航。",
-      "locked": false
+      "note": "【官方】由平良港約 5 分車程，實際郵輪岸壁與候車另計。10:30 左右看伊良部大橋全景，不跨橋（跨橋、Painagama、海之驛僅備案）。地圖採官方觀光標點，實際上車地點以導航為準。",
+      "locked": false,
+      "mapQuery": "トゥリバーサンセットビーチ 宮古島市平良久貝550-6 沖縄県 日本",
+      "links": [
+        {
+          "label": "沖繩官方觀光資訊",
+          "url": "https://www.okinawastory.jp/spot/1099"
+        }
+      ],
+      "guide": "留在宮古本島看伊良部大橋，不跨橋；天氣差可省略。",
+      "lat": 24.79855156,
+      "lng": 125.25709534
     },
     {
       "id": "m-1209-d",
@@ -300,7 +332,15 @@
         "status": "estimate"
       },
       "note": "午餐吃宮古麵，順便買特產。座標未取得，以地址導航。",
-      "locked": false
+      "locked": false,
+      "mapQuery": "島の駅みやこ 本店 宮古島市平良久貝870-1 沖縄県 日本",
+      "links": [
+        {
+          "label": "官網・營業時間",
+          "url": "https://shimanoeki-miyako.com/access/"
+        }
+      ],
+      "guide": "直賣所 07:30–18:00、ちょうじ屋宮古麵 07:30–15:00。"
     },
     {
       "id": "m-1209-e",
@@ -317,7 +357,15 @@
         "status": "pending"
       },
       "note": "【官方】9–24 時、標示免稅。與島之站同生活圈。座標未取得。",
-      "locked": false
+      "locked": false,
+      "mapQuery": "ドラッグストアモリ 久貝店 宮古島市平良久貝901-1 沖縄県 日本",
+      "links": [
+        {
+          "label": "官網・店鋪資訊",
+          "url": "https://www.doramori.co.jp/store/4760.html/"
+        }
+      ],
+      "guide": "09:00–24:00，官網標示免稅。藥妝、保養、日用品。"
     },
     {
       "id": "m-1209-f",
@@ -334,7 +382,19 @@
         "status": "pending"
       },
       "note": "【官方】24 小時、列有藥品；MaxValu 當店免稅與藥品櫃檯時段【待確認】。座標未取得。",
-      "locked": false
+      "locked": false,
+      "mapQuery": "マックスバリュ宮古南店 宮古島市平良松原631 沖縄県 日本",
+      "links": [
+        {
+          "label": "永旺官方店鋪資訊",
+          "url": "https://aeon-ryukyu.jp/store/maxvalu/miyakominami"
+        },
+        {
+          "label": "Google 地圖（永旺店鋪）",
+          "url": "https://maps.app.goo.gl/4kQebTTgDxCyWZwN6"
+        }
+      ],
+      "guide": "超市24小時營業；衣料館10:00–21:00。當店退稅及藥品櫃檯時間待確認。"
     },
     {
       "id": "m-1209-k",
@@ -346,7 +406,14 @@
       "address": "永旺宮古南／店內",
       "cost": null,
       "note": "免稅品分開結帳（當場吃用的不要放進同張收據）；保留護照與收據。",
-      "locked": false
+      "locked": false,
+      "mapQuery": "マックスバリュ宮古南店 宮古島市平良松原631 沖縄県 日本",
+      "links": [
+        {
+          "label": "日本免稅新制 FAQ",
+          "url": "https://www.mlit.go.jp/kankocho/tax-free/page01_000001_00023.html"
+        }
+      ]
     },
     {
       "id": "m-1209-g",
@@ -360,7 +427,9 @@
       "note": "回船目標不是船方 All aboard；All aboard 17:00（推估）。",
       "locked": true,
       "lat": 24.809,
-      "lng": 125.278
+      "lng": 125.278,
+      "mapQuery": "平良港 国際クルーズターミナル 宮古島市 沖縄県 日本",
+      "links": []
     },
     {
       "id": "m-1209-r",
@@ -454,7 +523,9 @@
       "lng": 127.6775,
       "cost": null,
       "note": "【已查證】MSC Bellissima 2023 年起用新港ふ頭第2クルーズバース；候船處離船約 1 km，大型船靠港曾出現計程車長排。07:00 靠岸，08:30 下船。共乘計程車、不包車；船方最終泊位公告為準。",
-      "locked": true
+      "locked": true,
+      "mapQuery": "那覇港 新港ふ頭 那覇市 沖縄県 日本",
+      "links": []
     },
     {
       "id": "m-1210-c",
@@ -473,7 +544,23 @@
         "status": "confirmed"
       },
       "note": "09:00 計程車到首里杜館，09:30 起深度參觀。12–3 月有料區 8:30–18:00，最後入場 17:30。首里城是這天必保留的重點，延誤先刪商場。成人 ¥1,000。現場照園方規定，禁止拍攝處不拍。",
-      "locked": false
+      "locked": false,
+      "mapQuery": "首里杜館 首里城公園 那覇市 沖縄県 日本",
+      "links": [
+        {
+          "label": "首里城官網",
+          "url": "https://oki-park.jp/shurijo/"
+        },
+        {
+          "label": "繁體中文購票說明",
+          "url": "https://oki-park.jp/shurijo/ticket_guide/11416"
+        },
+        {
+          "label": "正殿官方預約",
+          "url": "https://webket.jp/pc/ticket/index?fc=00471&ac=8001"
+        }
+      ],
+      "guide": "守禮門、歡會門、瑞泉門、奉神門及正殿外觀。成人 ¥1,000。"
     },
     {
       "id": "m-1210-k",
@@ -487,7 +574,19 @@
       "note": "正殿內部要日時指定預約；先前查有票，不等於已購。沒票就走外觀、復興展示室與展望台。",
       "locked": false,
       "lat": 26.217,
-      "lng": 127.7195
+      "lng": 127.7195,
+      "mapQuery": "首里城公園 那覇市首里金城町1-2 沖縄県 日本",
+      "links": [
+        {
+          "label": "購票・預約規則",
+          "url": "https://oki-park.jp/shurijo/ticket_guide/11416"
+        },
+        {
+          "label": "Webket 官方購票",
+          "url": "https://webket.jp/pc/ticket/index?fc=00471&ac=8001"
+        }
+      ],
+      "guide": "建議11:30日本時間；選「含正殿內部參觀預約」，自備鞋袋、QR Code。未確認已購票。"
     },
     {
       "id": "m-1210-l",
@@ -501,7 +600,15 @@
       "note": "",
       "locked": false,
       "lat": 26.217,
-      "lng": 127.7195
+      "lng": 127.7195,
+      "mapQuery": "首里城公園 那覇市首里金城町1-2 沖縄県 日本",
+      "links": [
+        {
+          "label": "首里城園區資訊",
+          "url": "https://oki-park.jp/shurijo/"
+        }
+      ],
+      "guide": "重建展示、展望台、紀念品；時間允許才選逛周邊，不影響回船。"
     },
     {
       "id": "m-1210-d",
@@ -520,7 +627,19 @@
       "note": "12:45 從首里城出發。地圖標點為商場旁的 OSM 標點，導航以地址為準。",
       "locked": false,
       "lat": 26.2616,
-      "lng": 127.6991
+      "lng": 127.6991,
+      "mapQuery": "サンエー浦添西海岸 PARCO CITY 浦添市西洲3-1-1 沖縄県 日本",
+      "links": [
+        {
+          "label": "PARCO CITY 官網",
+          "url": "https://www.parcocity.jp/"
+        },
+        {
+          "label": "樓層地圖",
+          "url": "https://www.parcocity.jp/floorguide/"
+        }
+      ],
+      "guide": "2F 海景美食廣場：歐姆蛋塔可飯、A&W、牛排等。"
     },
     {
       "id": "m-1210-m",
@@ -534,7 +653,15 @@
       "note": "",
       "locked": false,
       "lat": 26.2616,
-      "lng": 127.6991
+      "lng": 127.6991,
+      "mapQuery": "サンエー浦添西海岸 PARCO CITY 浦添市西洲3-1-1 沖縄県 日本",
+      "links": [
+        {
+          "label": "PARCO CITY 官方活動",
+          "url": "https://www.parcocity.jp/"
+        }
+      ],
+      "guide": "春池玻璃聯名聖誕活動 11/14–12/27；市集12/18才開始。"
     },
     {
       "id": "m-1210-n",
@@ -548,7 +675,19 @@
       "note": "",
       "locked": false,
       "lat": 26.2616,
-      "lng": 127.6991
+      "lng": 127.6991,
+      "mapQuery": "サンエー浦添西海岸 PARCO CITY 浦添市西洲3-1-1 沖縄県 日本",
+      "links": [
+        {
+          "label": "3F 樓層地圖",
+          "url": "https://www.parcocity.jp/floorguide/map/?f=3f"
+        },
+        {
+          "label": "沖繩伴手禮特輯",
+          "url": "https://www.parcocity.jp/okinawasouvenir/"
+        }
+      ],
+      "guide": "吉伊卡哇風獅爺、POP MART，其他角色商品依時間選逛。"
     },
     {
       "id": "m-1210-e",
@@ -567,7 +706,15 @@
       "note": "",
       "locked": false,
       "lat": 26.2616,
-      "lng": 127.6991
+      "lng": 127.6991,
+      "mapQuery": "サンエー浦添西海岸 PARCO CITY 浦添市西洲3-1-1 沖縄県 日本",
+      "links": [
+        {
+          "label": "商場樓層地圖",
+          "url": "https://www.parcocity.jp/floorguide/"
+        }
+      ],
+      "guide": "Wpc.、Francfranc、首里石鹼、Blue Seal 等依喜好選逛。"
     },
     {
       "id": "m-1210-o",
@@ -586,7 +733,18 @@
       "note": "免稅品分開結帳；保留護照與收據。16:00 叫車。",
       "locked": false,
       "lat": 26.2616,
-      "lng": 127.6991
+      "lng": 127.6991,
+      "mapQuery": "サンエー浦添西海岸 PARCO CITY 浦添市西洲3-1-1 沖縄県 日本",
+      "links": [
+        {
+          "label": "商場免稅資訊",
+          "url": "https://www.parcocity.jp/tw-okinawa/taxfree/"
+        },
+        {
+          "label": "日本免稅新制 FAQ",
+          "url": "https://www.mlit.go.jp/kankocho/tax-free/page01_000001_00023.html"
+        }
+      ]
     },
     {
       "id": "m-1210-g",
@@ -600,7 +758,9 @@
       "note": "16:00 叫車；寄港日計程車與回船車流會塞，這是目標不是船方截止。All aboard 18:00（推估）。",
       "locked": true,
       "lat": 26.2415,
-      "lng": 127.6775
+      "lng": 127.6775,
+      "mapQuery": "那覇港 新港ふ頭 那覇市 沖縄県 日本",
+      "links": []
     },
     {
       "id": "m-1210-h",
@@ -676,7 +836,9 @@
       "lng": 124.147,
       "cost": null,
       "note": "【已查證】09:00 抵港，10:00 下船；石垣只有新港地區一座外航郵輪岸壁，離市區遠，靠岸日計程車不保證有，事先預約。共乘計程車、不包車。",
-      "locked": true
+      "locked": true,
+      "mapQuery": "石垣港 新港地区 クルーズ岸壁 石垣市 沖縄県 日本",
+      "links": []
     },
     {
       "id": "m-1211-d",
@@ -692,8 +854,18 @@
         "per": "person",
         "status": "confirmed"
       },
-      "note": "【官方】9–18:30，成人 ¥1,200；曾去過但影片遺失，這次確定參觀；現場照園方規定，禁止拍攝處不拍。座標未取得，以地址導航。",
-      "locked": false
+      "note": "【官方】9–18:30，成人 ¥1,200；曾去過但影片遺失，這次確定參觀；現場照園方規定，禁止拍攝處不拍。地圖採公開景點資料的概略標點，實際入口以地址導航。",
+      "locked": false,
+      "mapQuery": "石垣島鍾乳洞 石垣市石垣1666 沖縄県 日本",
+      "links": [
+        {
+          "label": "中文官網・票價",
+          "url": "https://www.ishigaki-cave.com/tw/"
+        }
+      ],
+      "guide": "09:00–18:30，成人 ¥1,200。看龍貓鍾乳石、長壽之湖及七彩照明。",
+      "lat": 24.36181259,
+      "lng": 124.15431213
     },
     {
       "id": "m-1211-e",
@@ -712,7 +884,15 @@
       "note": "【估算】出發前挑好店並確認 12 月營業。想吃船上牛排的做法見備案，兩餐不同時排。",
       "locked": false,
       "lat": 24.3399,
-      "lng": 124.1581
+      "lng": 124.1581,
+      "mapQuery": "石垣市公設市場 石垣市大川208 沖縄県 日本",
+      "links": [
+        {
+          "label": "公設市場餐飲與店鋪",
+          "url": "https://ishigaki-kousetsu-ichiba.com/"
+        }
+      ],
+      "guide": "市區午餐店家未定。八重山麵或石垣牛；若預約牛排會員午餐，改提早回船，不重複兩餐。"
     },
     {
       "id": "m-1211-f",
@@ -731,7 +911,15 @@
       "note": "【已查證（第三方）】公設市場 9:00–19:00，12/11 營業；2 樓特產品販售中心 10:00–19:00。",
       "locked": false,
       "lat": 24.3399,
-      "lng": 124.1581
+      "lng": 124.1581,
+      "mapQuery": "石垣市公設市場 石垣市大川208 沖縄県 日本",
+      "links": [
+        {
+          "label": "市場官方網站・樓層地圖",
+          "url": "https://ishigaki-kousetsu-ichiba.com/"
+        }
+      ],
+      "guide": "1F 鮮食與小吃、2F 伴手禮、3F 市場食堂。"
     },
     {
       "id": "m-1211-q",
@@ -745,7 +933,14 @@
       "note": "若退稅要求更早，先刪市區選逛。",
       "locked": false,
       "lat": 24.3399,
-      "lng": 124.1581
+      "lng": 124.1581,
+      "mapQuery": "石垣市公設市場 石垣市大川208 沖縄県 日本",
+      "links": [
+        {
+          "label": "日本免稅新制 FAQ",
+          "url": "https://www.mlit.go.jp/kankocho/tax-free/page01_000001_00023.html"
+        }
+      ]
     },
     {
       "id": "m-1211-g",
@@ -759,7 +954,15 @@
       "note": "這是最後一個日本港；依船方指定時段與地點完成海關退稅確認，留足緩衝。回港不等於退稅已辦或已回船。日落 17:56；All aboard 18:00（推估）。",
       "locked": true,
       "lat": 24.324,
-      "lng": 124.147
+      "lng": 124.147,
+      "mapQuery": "石垣港 新港地区 クルーズ岸壁 石垣市 沖縄県 日本",
+      "links": [
+        {
+          "label": "日本免稅新制 FAQ",
+          "url": "https://www.mlit.go.jp/kankocho/tax-free/page01_000001_00023.html"
+        }
+      ],
+      "guide": "依船方指定地點與時間辦理最後日本港海關確認，保留護照、收據、商品。"
     },
     {
       "id": "m-1211-i",
@@ -1009,6 +1212,26 @@
       "mode": "taxi",
       "minutes": 15,
       "cost": null
+    },
+    "m-1209-b>m-1209-c": {
+      "mode": "taxi",
+      "minutes": 15,
+      "cost": null
+    },
+    "m-1209-c>m-1209-g": {
+      "mode": "taxi",
+      "minutes": 15,
+      "cost": null
+    },
+    "m-1211-c>m-1211-d": {
+      "mode": "taxi",
+      "minutes": 15,
+      "cost": null
+    },
+    "m-1211-d>m-1211-e": {
+      "mode": "taxi",
+      "minutes": 15,
+      "cost": null
     }
   },
   "packingGroups": [
@@ -1167,7 +1390,7 @@
       "done": false
     }
   ],
-  "revision": "2026-11-28-v6-leisure-r2",
+  "revision": "2026-11-28-v6-leisure-r3-guide",
   "emergency": {
     "contacts": [
       {
