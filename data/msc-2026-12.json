@@ -47,26 +47,26 @@
       "depart": "18:00",
       "allAboard": "17:00",
       "safeReturn": "16:45",
-      "note": "港時已由 MSC App 確認；All aboard 17:00 為推估；日落約 17:40（估算）；泊位（下崎或漲水）與接駁以 The Daily 為準",
+      "note": "港時已由 MSC App 確認；All aboard 17:00 為推估；日落約 17:40（估算）；泊位（下崎或漲水）與接駁以 The Daily 為準；入境批次與截止待確認",
       "planB": {
-        "title": "下雨或風大：只留市區",
-        "trigger": "當天早上 08:00 看風雨：下雨、風大或浪高就不過橋",
+        "title": "通關晚或天氣差：優先採買、刪海景",
+        "trigger": "入境批次晚，或當天早上風雨大",
         "steps": [
           {
-            "time": "09:50",
-            "text": "平良市區：西里通り散步，看雨勢再決定"
+            "time": "10:00",
+            "text": "刪 Twuriba 海景，直接去島之站みやこ（室內），買宮古麵與特產"
           },
           {
             "time": "11:55",
-            "text": "宮古そば午餐（大和食堂，備案丸吉食堂）"
+            "text": "ドラッグストアモリ 久貝店採買（官方標示免稅）"
           },
           {
-            "time": "13:20",
-            "text": "ドン・キホーテ宮古島店採買、咖啡"
+            "time": "13:00",
+            "text": "イオンタウン宮古南／マックスバリュ 採買、結帳登錄退稅"
           },
           {
-            "time": "15:15",
-            "text": "回港上船，船上 Thermal／咖啡館休息"
+            "time": "14:30",
+            "text": "叫車回船，目標 15:00 前上船；不再塞偏遠景點"
           }
         ]
       }
@@ -82,26 +82,26 @@
       "depart": "19:00",
       "allAboard": "18:00",
       "safeReturn": "17:40",
-      "note": "港時已由 MSC App 確認；All aboard 18:00 為推估；日落 17:38；已查證：Bellissima 在那霸用新港ふ頭第2クルーズバース（離市區較遠，早上排車要預留）",
+      "note": "港時已由 MSC App 確認；All aboard 18:00 為推估；日落 17:38；已查證：Bellissima 在那霸用新港ふ頭第2クルーズバース（離市區較遠，早上排車要預留）；船方最終公告為準",
       "planB": {
-        "title": "下雨或沒搶到正殿餘票",
-        "trigger": "下雨，或當天早上看不到正殿餘票",
+        "title": "延誤、下雨或沒票：首里城優先，商場先刪",
+        "trigger": "下船或排車延誤，或正殿內部沒票、下雨",
         "steps": [
           {
-            "time": "09:10",
-            "text": "改去 ASHIBINAA Outlet（室內購物，離碼頭約 25 分車程，【估算】營業時間待查），不去首里城"
+            "time": "09:30",
+            "text": "首里城必保留；沒正殿票就走外觀、復興展示室與展望台"
           },
           {
-            "time": "12:00",
-            "text": "牧志市場午餐（有拱廊，不怕雨）"
+            "time": "12:15",
+            "text": "延誤就刪 PARCO 商場（先刪吉伊卡哇與 POP MART、甜點），首里城附近簡單吃"
           },
           {
-            "time": "13:30",
-            "text": "國際通り・市場本通り拱廊、ドンキ採買"
+            "time": "13:15",
+            "text": "時間夠、下雨時，PARCO CITY 室內午餐與選逛"
           },
           {
             "time": "15:30",
-            "text": "回港上船（目標 17:00）"
+            "text": "結帳登錄後叫車回港，目標 17:00 前上船"
           }
         ]
       }
@@ -117,26 +117,26 @@
       "depart": "19:00",
       "allAboard": "18:00",
       "safeReturn": "17:30",
-      "note": "港時已由 MSC App 確認；All aboard 18:00 為推估；日落 17:56；石垣用新港地區郵輪岸壁；若港序不變，這是最後日本港，退稅查驗在這裡辦（條件式，待船方確認）",
+      "note": "港時已由 MSC App 確認；All aboard 18:00 為推估；日落 17:56；石垣用新港地區郵輪岸壁；這是最後日本港，依船方指定時段完成海關退稅確認（待船方確認）",
       "planB": {
-        "title": "玻璃船停航或下雨",
-        "trigger": "前一晚或早上打電話確認玻璃船是否停航",
+        "title": "想吃船上牛排午餐，或天氣差",
+        "trigger": "登船後確認牛排館有可預約的午餐時段與會員兌換；或前一晚看天氣",
         "steps": [
           {
-            "time": "10:30",
-            "text": "仍搭計程車去川平灣，只看展望台與海色，不坐船（免費）；雨很大就直接去市區"
+            "time": "11:30",
+            "text": "鐘乳洞後不逛市區，直接叫車回港（取代岸上午餐與選逛，兩餐不同時排）"
           },
           {
-            "time": "12:05",
-            "text": "市區午餐，不專程跑川平"
+            "time": "12:15",
+            "text": "回船先處理海關退稅確認（實際可預約時段與退稅優先）"
           },
           {
-            "time": "13:30",
-            "text": "公設市場・特產品販售中心・ユーグレナモール採買"
+            "time": "12:45",
+            "text": "船上牛排午餐（上次只開午餐、晚上不能約；沒訂到就改走主線的岸上午餐）"
           },
           {
-            "time": "15:20",
-            "text": "回港、退稅查驗、上船（目標 17:00）"
+            "time": "14:00",
+            "text": "下午船上休息、設施"
           }
         ]
       }
@@ -156,8 +156,8 @@
     {
       "id": "m-1208-c",
       "date": "2026-12-08",
-      "start": "15:40",
-      "duration": 50,
+      "start": "15:30",
+      "duration": 40,
       "category": "stay",
       "title": "進房・榮耀大道・水晶旋梯",
       "address": "艙房／榮耀大道",
@@ -212,7 +212,7 @@
         "per": "group",
         "status": "confirmed"
       },
-      "note": "會員可提早入場（待核）",
+      "note": "依預約與 The Daily 時段；會員提早入場待核",
       "locked": false
     },
     {
@@ -221,12 +221,25 @@
       "start": "21:30",
       "duration": 30,
       "category": "stay",
-      "title": "研究宮古島下船與接駁",
+      "title": "確認宮古島入境截止與批次",
       "address": "艙房",
       "onboard": true,
       "cost": null,
-      "note": "確認 all aboard、接駁車位置",
+      "note": "問服務台並看 The Daily，分批就依最早的指定時間；過往航次曾要求 11:00 前，不是本航次公告，不能當保證，也不要睡到 10:30 才出發",
       "locked": false
+    },
+    {
+      "id": "m-1208-h",
+      "date": "2026-12-08",
+      "start": "16:10",
+      "duration": 30,
+      "category": "food",
+      "title": "特色餐預約處：福利、SPA、F1、表演",
+      "address": "特色餐預約處／服務台",
+      "cost": null,
+      "note": "帶房卡去核對會員特色餐福利與適用餐廳、可預約的時段，並預約 SPA、F1 模擬器與劇院表演；未代訂，現場為準",
+      "locked": false,
+      "onboard": true
     },
     {
       "id": "m-1209-a",
@@ -249,101 +262,123 @@
     {
       "id": "m-1209-b",
       "date": "2026-12-09",
-      "start": "08:50",
-      "duration": 50,
+      "start": "09:00",
+      "duration": 30,
       "category": "transport",
-      "title": "下船・入境・上車",
+      "title": "下船・入境（依指定批次）",
       "address": "平良港郵輪碼頭",
       "lat": 24.809,
       "lng": 125.278,
       "cost": null,
-      "note": "【估算】08:00 靠岸，約 08:50 才輪到下船。計程車出發前先電話或 App 預約。計程車全程以跳錶估算（見交通明細）；若要司機全程等你，改問「包車 4–5 小時」價格（未查到公開價）。【待查】靠哪個碼頭（下崎離市區約 3 km、漲水較近）以 The Daily／宮古島市港灣課公告為準。",
+      "note": "08:00 靠岸；09:00–09:30 依船方指定批次辦入境，截止與批次待 D1 確認。共乘計程車、不包車，出發前先電話或 App 預約。【待查】泊位（下崎或漲水）以 The Daily 為準。",
       "locked": true
     },
     {
       "id": "m-1209-c",
       "date": "2026-12-09",
-      "start": "10:05",
-      "duration": 85,
+      "start": "10:00",
+      "duration": 50,
       "category": "sight",
-      "title": "伊良部大橋・渡口之濱",
-      "address": "沖繩縣宮古島市伊良部（伊良部大橋東端）",
-      "lat": 24.7967,
-      "lng": 125.2395,
+      "title": "トゥリバーサンセットビーチ（Twuriba 海濱公園）看伊良部大橋",
+      "address": "平良久貝550-6（以地址導航）",
       "cost": null,
-      "note": "【已查證】伊良部大橋全長 3,540 m、免費通行，橋兩端有停車處。渡口之濱在橋的另一頭，免費海灘。12 月偏涼不下水，拍海色、橋與空拍（拍攝時間已加 30%）。",
+      "note": "【官方】由平良港約 5 分車程，實際郵輪岸壁與候車另計。10:30 左右看伊良部大橋全景，不跨橋（跨橋、Painagama、海之驛僅備案）。頻道用途拍攝先確認港灣課要求。座標未取得，以地址導航。",
       "locked": false
     },
     {
       "id": "m-1209-d",
       "date": "2026-12-09",
-      "start": "12:05",
-      "duration": 75,
+      "start": "11:00",
+      "duration": 55,
       "category": "food",
-      "title": "宮古そば午餐（大和食堂）",
-      "address": "宮古島市平良西里 819-3",
-      "lat": 24.7915,
-      "lng": 125.283,
+      "title": "島之站みやこ：宮古麵・特產",
+      "address": "平良久貝870-1（以地址導航）",
       "cost": {
-        "amount": 1000,
+        "amount": 1200,
         "currency": "JPY",
         "per": "person",
         "status": "estimate"
       },
-      "note": "【已查證（第三方站台）】大和食堂 9:30–19:00、週二休，12/09 是週三有開；備案丸吉食堂 10:30–18:00（不定休）。古謝そば屋週三休，不排。未向店家確認，出發前先打電話。",
+      "note": "午餐吃宮古麵，順便買特產。座標未取得，以地址導航。",
       "locked": false
     },
     {
-      "id": "m-1209-f",
+      "id": "m-1209-e",
       "date": "2026-12-09",
-      "start": "13:30",
-      "duration": 70,
+      "start": "12:00",
+      "duration": 50,
       "category": "shop",
-      "title": "ドン・キホーテ宮古島店・伴手禮",
-      "address": "宮古島市平良西里 1283",
-      "lat": 24.7905,
-      "lng": 125.2885,
+      "title": "ドラッグストアモリ 久貝店（藥妝採買）",
+      "address": "平良久貝901-1（以地址導航）",
       "cost": {
         "amount": null,
         "currency": "JPY",
         "per": "group",
         "status": "pending"
       },
-      "note": "【已查證（第三方站台）】營業 8:00–2:00、無休、有免稅。2026-11 起日本改「先付含稅價、離境查驗後退」，要先在店裡辦免稅登記；實際查驗在最後日本港石垣（條件式，待船方確認）。",
+      "note": "【官方】9–24 時、標示免稅。與島之站同生活圈。座標未取得。",
+      "locked": false
+    },
+    {
+      "id": "m-1209-f",
+      "date": "2026-12-09",
+      "start": "13:00",
+      "duration": 75,
+      "category": "shop",
+      "title": "イオンタウン宮古南／マックスバリュ（零食日用品）",
+      "address": "平良松原631（以地址導航）",
+      "cost": {
+        "amount": null,
+        "currency": "JPY",
+        "per": "group",
+        "status": "pending"
+      },
+      "note": "【官方】24 小時、列有藥品；MaxValu 當店免稅與藥品櫃檯時段【待確認】。座標未取得。",
       "locked": false
     },
     {
       "id": "m-1209-k",
       "date": "2026-12-09",
-      "start": "14:55",
-      "duration": 30,
-      "category": "sight",
-      "title": "平良市區散步・咖啡（緩衝）",
-      "address": "宮古島市平良",
-      "lat": 24.7955,
-      "lng": 125.2815,
-      "cost": {
-        "amount": 600,
-        "currency": "JPY",
-        "per": "person",
-        "status": "estimate"
-      },
-      "note": "【估算】刻意留空：拍片、排隊叫車和 12 月風大都可能拖時間，這段可被吃掉。",
+      "start": "14:15",
+      "duration": 15,
+      "category": "shop",
+      "title": "結帳・購買退稅登錄・叫車",
+      "address": "永旺宮古南／店內",
+      "cost": null,
+      "note": "免稅品分開結帳（當場吃用的不要放進同張收據）；保留護照與收據。",
       "locked": false
     },
     {
       "id": "m-1209-g",
       "date": "2026-12-09",
-      "start": "15:40",
-      "duration": 20,
+      "start": "14:45",
+      "duration": 15,
       "category": "transport",
-      "title": "回港・安檢上船（上船目標 16:00）",
+      "title": "回港・安檢上船（目標 14:30–15:00 回船）",
       "address": "平良港郵輪碼頭",
-      "lat": 24.809,
-      "lng": 125.278,
       "cost": null,
-      "note": "All aboard 17:00（推估）前 60 分鐘就回到船上；離港 18:00 前 60 分鐘不再下船。",
-      "locked": true
+      "note": "回船目標不是船方 All aboard；All aboard 17:00（推估）。",
+      "locked": true,
+      "lat": 24.809,
+      "lng": 125.278
+    },
+    {
+      "id": "m-1209-r",
+      "date": "2026-12-09",
+      "start": "15:15",
+      "duration": 90,
+      "category": "stay",
+      "title": "船上休息：泳池、下午茶、Thermal Area",
+      "address": "SPA／泳池",
+      "cost": {
+        "amount": 0,
+        "currency": "USD",
+        "per": "group",
+        "status": "pending"
+      },
+      "note": "會員權益：Thermal 1 小時、18+、需預約、不可轉讓；時段依預約與日報，設施開放不保證",
+      "locked": false,
+      "onboard": true
     },
     {
       "id": "m-1209-h",
@@ -364,7 +399,7 @@
       "start": "19:00",
       "duration": 90,
       "category": "food",
-      "title": "特色餐 Tasting Menu",
+      "title": "特色餐（候選晚餐，未訂）",
       "address": "特色餐廳",
       "onboard": true,
       "cost": {
@@ -373,7 +408,7 @@
         "per": "group",
         "status": "pending"
       },
-      "note": "會員權益：每航次 1 次；需預約",
+      "note": "候選：船上確認有適用的特色餐廳與晚餐時段才訂；兌換名額與餐廳不保證。牛排館上次只開放午餐，晚上不一定能約",
       "locked": false
     },
     {
@@ -410,25 +445,25 @@
     {
       "id": "m-1210-b",
       "date": "2026-12-10",
-      "start": "08:00",
-      "duration": 60,
+      "start": "08:30",
+      "duration": 30,
       "category": "transport",
-      "title": "那霸下船・入境・排接駁／計程車",
+      "title": "那霸下船・入境・排計程車",
       "address": "那霸港新港ふ頭 第2クルーズバース（12 號岸壁）",
       "lat": 26.2415,
       "lng": 127.6775,
       "cost": null,
-      "note": "【已查證】MSC Bellissima 2023 年起用新港ふ頭第2クルーズバース（琉球新報 2023-06）。碼頭候船處離船約 1 km，大型船靠港時曾出現計程車長排與接駁不足；07:00 靠岸、約 08:00 開始下船。",
+      "note": "【已查證】MSC Bellissima 2023 年起用新港ふ頭第2クルーズバース；候船處離船約 1 km，大型船靠港曾出現計程車長排。07:00 靠岸，08:30 下船。共乘計程車、不包車；船方最終泊位公告為準。",
       "locked": true
     },
     {
       "id": "m-1210-c",
       "date": "2026-12-10",
       "start": "09:30",
-      "duration": 135,
+      "duration": 120,
       "category": "sight",
-      "title": "首里城公園",
-      "address": "沖繩縣那霸市首里金城町 1-2",
+      "title": "首里城公園：守禮門・城門・外觀",
+      "address": "沖繩縣那霸市首里金城町 1-2（計程車先到首里杜館下車）",
       "lat": 26.217,
       "lng": 127.7195,
       "cost": {
@@ -437,60 +472,135 @@
         "per": "person",
         "status": "confirmed"
       },
-      "note": "【已查證（官方公告經第三方整理）】正殿 2026-11-23 起復原公開，12 月入場為成人 ¥1,000；進正殿要「日時指定」預約（30 分一格、12 月分售票已結束，只剩當日餘票）。沒有預約也能逛有料區（世誇殿、復原展示室、外觀展望台）。12–3 月有料區 8:30–18:00、最後入場 17:30。【待查】出發前一天再看餘票；沒搶到就改走外觀＋展示。",
+      "note": "09:00 計程車到首里杜館，09:30 起深度參觀。12–3 月有料區 8:30–18:00，最後入場 17:30。首里城是這天必保留的重點，延誤先刪商場。成人 ¥1,000。拍攝需先核許可。",
       "locked": false
+    },
+    {
+      "id": "m-1210-k",
+      "date": "2026-12-10",
+      "start": "11:30",
+      "duration": 45,
+      "category": "sight",
+      "title": "首里城正殿內部（建議預約）",
+      "address": "沖繩縣那霸市首里金城町 1-2",
+      "cost": null,
+      "note": "正殿內部要日時指定預約；先前查有票，不等於已購。沒票就走外觀、復興展示室與展望台。",
+      "locked": false,
+      "lat": 26.217,
+      "lng": 127.7195
+    },
+    {
+      "id": "m-1210-l",
+      "date": "2026-12-10",
+      "start": "12:15",
+      "duration": 30,
+      "category": "sight",
+      "title": "復興展示、展望台、紀念品擇要",
+      "address": "沖繩縣那霸市首里金城町 1-2",
+      "cost": null,
+      "note": "",
+      "locked": false,
+      "lat": 26.217,
+      "lng": 127.7195
     },
     {
       "id": "m-1210-d",
       "date": "2026-12-10",
-      "start": "12:05",
-      "duration": 75,
+      "start": "13:15",
+      "duration": 45,
       "category": "food",
-      "title": "第一牧志公設市場午餐（2 樓食堂）",
-      "address": "那霸市松尾 2-10-1",
-      "lat": 26.2145,
-      "lng": 127.6883,
+      "title": "PARCO CITY 海景午餐",
+      "address": "沖繩縣浦添市西洲 3-1-1（PARCO CITY）",
       "cost": {
-        "amount": 2000,
+        "amount": 1500,
         "currency": "JPY",
         "per": "person",
         "status": "estimate"
       },
-      "note": "【已查證（第三方站台）】8:00–22:00、第 4 個週日等休；12/10 是週四。1 樓買魚、2 樓代煮。市場常客滿，先排隊再逛。",
-      "locked": false
+      "note": "12:45 從首里城出發。地圖標點為商場旁的 OSM 標點，導航以地址為準。",
+      "locked": false,
+      "lat": 26.2616,
+      "lng": 127.6991
+    },
+    {
+      "id": "m-1210-m",
+      "date": "2026-12-10",
+      "start": "14:00",
+      "duration": 20,
+      "category": "sight",
+      "title": "春池玻璃聖誕樹",
+      "address": "PARCO CITY",
+      "cost": null,
+      "note": "",
+      "locked": false,
+      "lat": 26.2616,
+      "lng": 127.6991
+    },
+    {
+      "id": "m-1210-n",
+      "date": "2026-12-10",
+      "start": "14:20",
+      "duration": 40,
+      "category": "shop",
+      "title": "吉伊卡哇、POP MART 選逛",
+      "address": "PARCO CITY",
+      "cost": null,
+      "note": "",
+      "locked": false,
+      "lat": 26.2616,
+      "lng": 127.6991
     },
     {
       "id": "m-1210-e",
       "date": "2026-12-10",
-      "start": "13:30",
-      "duration": 105,
+      "start": "15:00",
+      "duration": 30,
+      "category": "food",
+      "title": "選逛或甜點",
+      "address": "PARCO CITY",
+      "cost": {
+        "amount": 400,
+        "currency": "JPY",
+        "per": "person",
+        "status": "estimate"
+      },
+      "note": "",
+      "locked": false,
+      "lat": 26.2616,
+      "lng": 127.6991
+    },
+    {
+      "id": "m-1210-o",
+      "date": "2026-12-10",
+      "start": "15:30",
+      "duration": 30,
       "category": "shop",
-      "title": "國際通り散步・ドン・キホーテ國際通り店（採買）",
-      "address": "那霸市久茂地・國際通り",
-      "lat": 26.2151,
-      "lng": 127.684,
+      "title": "結帳・購買退稅登錄",
+      "address": "PARCO CITY",
       "cost": {
         "amount": null,
         "currency": "JPY",
         "per": "group",
         "status": "pending"
       },
-      "note": "【估算】牧志市場步行約 6–7 分。免稅登記同石垣流程；【待查】店家營業時間與免稅櫃台。",
-      "locked": false
+      "note": "免稅品分開結帳；保留護照與收據。16:00 叫車。",
+      "locked": false,
+      "lat": 26.2616,
+      "lng": 127.6991
     },
     {
       "id": "m-1210-g",
       "date": "2026-12-10",
-      "start": "16:00",
-      "duration": 60,
+      "start": "16:30",
+      "duration": 30,
       "category": "transport",
-      "title": "回港・安檢上船（上船目標 17:00）",
+      "title": "回港・安檢上船（目標 16:30–17:00 回船）",
       "address": "那霸港新港ふ頭",
-      "lat": 26.2415,
-      "lng": 127.6775,
       "cost": null,
-      "note": "國際通り→碼頭約 3.5 km，但寄港日計程車與回船車流會塞，預留 90 分。All aboard 18:00（推估）前 60 分鐘回到船上。",
-      "locked": true
+      "note": "16:00 叫車；寄港日計程車與回船車流會塞，這是目標不是船方截止。All aboard 18:00（推估）。",
+      "locked": true,
+      "lat": 26.2415,
+      "lng": 127.6775
     },
     {
       "id": "m-1210-h",
@@ -520,7 +630,7 @@
         "per": "group",
         "status": "confirmed"
       },
-      "note": "",
+      "note": "晚餐可爭取適用的特色餐廳（會員福利待核，不保證兌換）",
       "locked": false
     },
     {
@@ -555,107 +665,119 @@
       "locked": false
     },
     {
-      "id": "m-1211-b",
-      "date": "2026-12-11",
-      "start": "08:00",
-      "duration": 60,
-      "category": "sight",
-      "title": "Thermal Area",
-      "address": "SPA",
-      "onboard": true,
-      "cost": {
-        "amount": 0,
-        "currency": "USD",
-        "per": "group",
-        "status": "pending"
-      },
-      "note": "會員權益：本人 1 小時、18+、需預約、不可轉讓",
-      "locked": false
-    },
-    {
       "id": "m-1211-c",
       "date": "2026-12-11",
-      "start": "09:45",
-      "duration": 45,
+      "start": "10:00",
+      "duration": 5,
       "category": "transport",
       "title": "石垣下船・上計程車",
       "address": "石垣港新港地區 クルーズ岸壁（-10.5 m）",
       "lat": 24.324,
       "lng": 124.147,
       "cost": null,
-      "note": "【已查證】石垣只有新港地區一座外航郵輪岸壁（-10.5 m），一天只收 1 艘；市區離岸壁遠，走到離島碼頭要 40–50 分。靠岸日早上常有計程車等客但不保證，事先預約或請旅行社送迎。車資以跳錶估算（見交通明細）。",
+      "note": "【已查證】09:00 抵港，10:00 下船；石垣只有新港地區一座外航郵輪岸壁，離市區遠，靠岸日計程車不保證有，事先預約。共乘計程車、不包車。",
       "locked": true
     },
     {
       "id": "m-1211-d",
       "date": "2026-12-11",
-      "start": "11:05",
-      "duration": 85,
+      "start": "10:20",
+      "duration": 70,
       "category": "sight",
-      "title": "川平灣・玻璃船",
-      "address": "沖繩縣石垣市川平",
-      "lat": 24.4501,
-      "lng": 124.1436,
+      "title": "石垣島鐘乳洞",
+      "address": "沖繩縣石垣市石垣 1666（以地址導航）",
       "cost": {
-        "amount": 1300,
+        "amount": 1200,
         "currency": "JPY",
         "per": "person",
-        "status": "estimate"
+        "status": "confirmed"
       },
-      "note": "【估算】岸壁到川平約 21 km、車程 33 分（國交省資料）；玻璃船約 30 分，¥1,300 為第三方站台舊價，運航 9:00–17:00 每 15 分一班，強風或浪大會停航，當天先打電話 0980-88-2335。冬季只看海色，不下水。",
+      "note": "【官方】9–18:30，成人 ¥1,200；曾去過但影片遺失，這次確定參觀；商業拍攝須先確認許可。座標未取得，以地址導航。",
       "locked": false
     },
     {
       "id": "m-1211-e",
       "date": "2026-12-11",
-      "start": "12:40",
-      "duration": 65,
+      "start": "11:45",
+      "duration": 60,
       "category": "food",
-      "title": "川平午餐（店家未定）",
-      "address": "石垣市川平",
-      "lat": 24.452,
-      "lng": 124.147,
+      "title": "市區午餐：八重山麵或石垣牛（店家未定）",
+      "address": "石垣市區（店家未定）",
       "cost": {
-        "amount": 1800,
+        "amount": 2000,
         "currency": "JPY",
         "per": "person",
         "status": "estimate"
       },
-      "note": "【估算】出發前挑好店、確認 12 月營業；不排石垣牛漢堡專程店。",
-      "locked": false
+      "note": "【估算】出發前挑好店並確認 12 月營業。想吃船上牛排的做法見備案，兩餐不同時排。",
+      "locked": false,
+      "lat": 24.3399,
+      "lng": 124.1581
     },
     {
       "id": "m-1211-f",
       "date": "2026-12-11",
-      "start": "14:20",
-      "duration": 90,
+      "start": "12:45",
+      "duration": 45,
       "category": "shop",
-      "title": "公設市場・特產品販售中心・採買",
+      "title": "公設市場・Euglena Mall 選逛",
       "address": "石垣市大川",
-      "lat": 24.3399,
-      "lng": 124.1581,
       "cost": {
         "amount": null,
         "currency": "JPY",
         "per": "group",
         "status": "pending"
       },
-      "note": "【已查證（第三方站台）】公設市場 9:00–19:00、第 2・4 個週日休（12/11 是週五）；2 樓特產品販售中心 10:00–19:00。這是最後一個日本港，退稅查驗要在這裡的港口完成。",
-      "locked": false
+      "note": "【已查證（第三方）】公設市場 9:00–19:00，12/11 營業；2 樓特產品販售中心 10:00–19:00。",
+      "locked": false,
+      "lat": 24.3399,
+      "lng": 124.1581
+    },
+    {
+      "id": "m-1211-q",
+      "date": "2026-12-11",
+      "start": "13:30",
+      "duration": 15,
+      "category": "shop",
+      "title": "結帳・購買退稅登錄・叫車",
+      "address": "石垣市區",
+      "cost": null,
+      "note": "若退稅要求更早，先刪市區選逛。",
+      "locked": false,
+      "lat": 24.3399,
+      "lng": 124.1581
     },
     {
       "id": "m-1211-g",
       "date": "2026-12-11",
-      "start": "16:05",
-      "duration": 55,
+      "start": "14:00",
+      "duration": 30,
       "category": "transport",
-      "title": "回港・退稅查驗・上船（上船目標 17:00）",
+      "title": "回港・離境海關確認・上船（目標 14:00–14:30 回船）",
       "address": "石垣港新港地區",
-      "lat": 24.324,
-      "lng": 124.147,
       "cost": null,
-      "note": "含退稅查驗緩衝 30 分（【待查】端末位置與時段，只有船方能確認）。日落 17:56。All aboard 18:00（推估）前 60 分鐘回到船上。",
-      "locked": true
+      "note": "這是最後一個日本港；依船方指定時段與地點完成海關退稅確認，留足緩衝。回港不等於退稅已辦或已回船。日落 17:56；All aboard 18:00（推估）。",
+      "locked": true,
+      "lat": 24.324,
+      "lng": 124.147
+    },
+    {
+      "id": "m-1211-i",
+      "date": "2026-12-11",
+      "start": "15:30",
+      "duration": 30,
+      "category": "sight",
+      "title": "F1 模擬器・船上設施",
+      "address": "遊樂區",
+      "cost": {
+        "amount": 0,
+        "currency": "USD",
+        "per": "group",
+        "status": "pending"
+      },
+      "note": "會員權益：1 次；依預約與開放時段",
+      "locked": false,
+      "onboard": true
     },
     {
       "id": "m-1211-h",
@@ -671,30 +793,12 @@
       "locked": false
     },
     {
-      "id": "m-1211-i",
-      "date": "2026-12-11",
-      "start": "19:30",
-      "duration": 30,
-      "category": "sight",
-      "title": "F1 模擬器",
-      "address": "遊樂區",
-      "onboard": true,
-      "cost": {
-        "amount": 0,
-        "currency": "USD",
-        "per": "group",
-        "status": "pending"
-      },
-      "note": "會員權益：1 次",
-      "locked": false
-    },
-    {
       "id": "m-1211-j",
       "date": "2026-12-11",
-      "start": "20:15",
+      "start": "19:30",
       "duration": 75,
       "category": "food",
-      "title": "主餐廳晚餐",
+      "title": "主餐廳晚餐（最後一晚）",
       "address": "主餐廳",
       "onboard": true,
       "cost": {
@@ -703,13 +807,31 @@
         "per": "group",
         "status": "confirmed"
       },
-      "note": "",
+      "note": "領會員照片、挑照片",
       "locked": false
+    },
+    {
+      "id": "m-1211-s",
+      "date": "2026-12-11",
+      "start": "21:00",
+      "duration": 60,
+      "category": "sight",
+      "title": "劇院表演",
+      "address": "劇院",
+      "cost": {
+        "amount": 0,
+        "currency": "TWD",
+        "per": "group",
+        "status": "confirmed"
+      },
+      "note": "",
+      "locked": false,
+      "onboard": true
     },
     {
       "id": "m-1211-k",
       "date": "2026-12-11",
-      "start": "21:45",
+      "start": "22:15",
       "duration": 45,
       "category": "stay",
       "title": "整理行李",
@@ -756,12 +878,12 @@
       "start": "08:30",
       "duration": 90,
       "category": "transport",
-      "title": "抵達基隆・分批下船",
+      "title": "抵達基隆・依通知分批下船",
       "address": "基隆港西岸旅客中心",
       "lat": 25.1318,
       "lng": 121.7406,
       "cost": null,
-      "note": "",
+      "note": "07:00 抵港；下船順序與時間依船方通知",
       "locked": true
     }
   ],
@@ -815,39 +937,39 @@
       "per": "group",
       "status": "estimate",
       "note": ""
+    },
+    {
+      "id": "f-taxi-miyako",
+      "name": "宮古島計程車（分段合計，估算）",
+      "category": "transport",
+      "amount": 5500,
+      "currency": "JPY",
+      "per": "vehicle",
+      "status": "estimate",
+      "note": "港口→Twuriba→島之站→MORI→永旺→港口；共乘 1 台、不包車，非報價"
+    },
+    {
+      "id": "f-taxi-ishigaki",
+      "name": "石垣島計程車（分段合計，估算）",
+      "category": "transport",
+      "amount": 6000,
+      "currency": "JPY",
+      "per": "vehicle",
+      "status": "estimate",
+      "note": "港口→鐘乳洞→市區→港口；非報價"
+    },
+    {
+      "id": "f-shore-reserve",
+      "name": "岸上機動緩衝",
+      "category": "sight",
+      "amount": 2700,
+      "currency": "JPY",
+      "per": "person",
+      "status": "estimate",
+      "note": "含交通、門票、岸上餐食的緩衝；購物與船上額外支出另計；估算非報價，未扣退稅"
     }
   ],
   "legOverrides": {
-    "m-1209-b>m-1209-c": {
-      "mode": "taxi",
-      "minutes": 25,
-      "cost": {
-        "amount": 3500,
-        "currency": "JPY",
-        "per": "vehicle",
-        "status": "estimate"
-      }
-    },
-    "m-1209-c>m-1209-d": {
-      "mode": "taxi",
-      "minutes": 35,
-      "cost": {
-        "amount": 4500,
-        "currency": "JPY",
-        "per": "vehicle",
-        "status": "estimate"
-      }
-    },
-    "m-1209-k>m-1209-g": {
-      "mode": "taxi",
-      "minutes": 12,
-      "cost": {
-        "amount": 1200,
-        "currency": "JPY",
-        "per": "vehicle",
-        "status": "estimate"
-      }
-    },
     "m-1210-b>m-1210-c": {
       "mode": "taxi",
       "minutes": 30,
@@ -858,55 +980,35 @@
         "status": "estimate"
       }
     },
-    "m-1210-c>m-1210-d": {
+    "m-1210-l>m-1210-d": {
       "mode": "taxi",
-      "minutes": 20,
+      "minutes": 30,
       "cost": {
-        "amount": 1800,
+        "amount": 2500,
         "currency": "JPY",
         "per": "vehicle",
         "status": "estimate"
       }
     },
-    "m-1210-e>m-1210-g": {
+    "m-1210-o>m-1210-g": {
       "mode": "taxi",
-      "minutes": 40,
+      "minutes": 30,
       "cost": {
-        "amount": 2000,
+        "amount": 2500,
         "currency": "JPY",
         "per": "vehicle",
         "status": "estimate"
       }
     },
-    "m-1211-c>m-1211-d": {
+    "m-1211-c>m-1211-e": {
       "mode": "taxi",
-      "minutes": 33,
-      "cost": {
-        "amount": 5500,
-        "currency": "JPY",
-        "per": "vehicle",
-        "status": "estimate"
-      }
+      "minutes": 30,
+      "cost": null
     },
-    "m-1211-e>m-1211-f": {
+    "m-1211-q>m-1211-g": {
       "mode": "taxi",
-      "minutes": 35,
-      "cost": {
-        "amount": 5000,
-        "currency": "JPY",
-        "per": "vehicle",
-        "status": "estimate"
-      }
-    },
-    "m-1211-f>m-1211-g": {
-      "mode": "taxi",
-      "minutes": 12,
-      "cost": {
-        "amount": 1000,
-        "currency": "JPY",
-        "per": "vehicle",
-        "status": "estimate"
-      }
+      "minutes": 15,
+      "cost": null
     }
   },
   "packingGroups": [
@@ -1065,7 +1167,7 @@
       "done": false
     }
   ],
-  "revision": "2026-11-21-replan",
+  "revision": "2026-11-28-v6-leisure",
   "emergency": {
     "contacts": [
       {
