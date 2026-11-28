@@ -121,7 +121,7 @@
           }
         }
         lastLoc = it;
-      }
+      } else if (!it.onboard && it.mapQuery) { lastLoc = null; }
       const prev = items[idx - 1];
       if (prev) {
         const leg = legs.find(l => l.to === it && l.from === prev);
@@ -641,6 +641,7 @@
       intro += `<div class="shoretime">可上岸時間約 ${durText(shore)}（表定抵達到${d.safeReturn ? '安全回船線' : 'All aboard'}，未扣下船入境排隊）</div>`;
     }
     if (d.note) intro += `<div class="shoretime">📝 ${esc(d.note)}</div>`;
+    intro += dayRouteHTML(d);
     intro += planBHTML(d);
     const allWarns = Object.entries(info.warns);
     if (allWarns.length) intro += `<ul class="warnlist">${allWarns.map(([id, ws]) => { const it = trip.items.find(x => x.id === id); return `<li>${esc(it.title)}：${esc(ws.join('；'))}</li>`; }).join('')}</ul>`;
@@ -664,7 +665,7 @@
       }
       const warn = info.warns[it.id];
       const cost = it.cost && it.cost.amount != null ? `${money(it.cost.amount, it.cost.currency)}／${perLabel[it.cost.per]}${statusTag(it.cost.status)}` : (it.cost && it.cost.status === 'pending' ? '<span class="tag pend">金額待填</span>' : '');
-      cards += `<div class="timeline-time-row" data-id="${it.id}" data-min="${toMin(it.start)}"><div class="rowtime">${it.start}</div><div class="timeline-card cat-${it.category}" tabindex="0" role="button" aria-label="${esc(it.title)} ${it.start}"><h3>${esc(it.title)}${it.locked ? '<span class="tag lock">已鎖定</span>' : ''}${it.onboard ? '<span class="tag">船上</span>' : ''}</h3><div class="cardmeta"><span>${it.start}–${fmt(endMin(it))}・${durText(Number(it.duration))}</span><span>${CAT[it.category].label}</span>${it.address ? `<span>${esc(it.address)}</span>` : ''}${cost ? `<span>${cost}</span>` : ''}</div>${it.note ? `<div class="cardnote">${esc(it.note)}</div>` : ''}${bookingHTML(it)}${it.review ? `<div class="cardnote review">💬 ${esc(it.review)}</div>` : ''}${warn ? `<div class="cardnote"><span class="tag warn">注意</span> ${esc(warn.join('；'))}</div>` : ''}</div></div>`;
+      cards += `<div class="timeline-time-row" data-id="${it.id}" data-min="${toMin(it.start)}"><div class="rowtime">${it.start}</div><div class="timeline-card cat-${it.category}" tabindex="0" role="button" aria-label="${esc(it.title)} ${it.start}"><h3>${esc(it.title)}${it.locked ? '<span class="tag lock">已鎖定</span>' : ''}${it.onboard ? '<span class="tag">船上</span>' : ''}</h3><div class="cardmeta"><span>${it.start}–${fmt(endMin(it))}・${durText(Number(it.duration))}</span><span>${CAT[it.category].label}</span>${it.address ? `<span>${esc(it.address)}</span>` : ''}${cost ? `<span>${cost}</span>` : ''}</div>${it.note ? `<div class="cardnote">${esc(it.note)}</div>` : ''}${guideHTML(it)}${bookingHTML(it)}${it.review ? `<div class="cardnote review">💬 ${esc(it.review)}</div>` : ''}${warn ? `<div class="cardnote"><span class="tag warn">注意</span> ${esc(warn.join('；'))}</div>` : ''}</div></div>`;
     });
     if (!info.items.length) cards += `<p class="emptynote">這天還沒有行程，按「＋」新增。</p>`;
     cards += `</div>`;
@@ -738,12 +739,40 @@
     } else $('#map').classList.add('notiles');
     layer = L.layerGroup().addTo(map);
   }
-  function gmaps(it) { return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(it.lat + ',' + it.lng)}`; }
+  const hasNav = it => !it.onboard && (Boolean(it.mapQuery) || hasLoc(it));
+  const navQuery = it => it.mapQuery || (hasLoc(it) ? it.lat + ',' + it.lng : '');
+  function gmaps(it) { return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(navQuery(it)); }
+  function externalGuideLink(label, url) {
+    try { const u = new URL(url); if (!['https:', 'http:'].includes(u.protocol)) return ''; }
+    catch (_) { return ''; }
+    return '<a class="spotlink" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">' + esc(label) + ' ↗</a>';
+  }
+  function guideHTML(it) {
+    const links = [];
+    if (hasNav(it)) {
+      links.push(externalGuideLink('Google 地圖', gmaps(it)));
+      links.push(externalGuideLink('前往這裡', 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(navQuery(it)) + '&travelmode=driving'));
+    }
+    if (Array.isArray(it.links)) it.links.forEach(l => { if (l && l.url && l.label) links.push(externalGuideLink(l.label, l.url)); });
+    if (!it.guide && !links.some(Boolean)) return '';
+    return '<div class="spot-guide">' + (it.guide ? '<div class="spot-guide-text">' + esc(it.guide) + '</div>' : '') + (links.some(Boolean) ? '<div class="spotlinks">' + links.join('') + '</div>' : '') + '</div>';
+  }
+  function dayRouteHTML(d) {
+    const pts = (d.routeIds || []).map(id => trip.items.find(it => it.id === id)).filter(it => it && hasNav(it));
+    if (pts.length < 2) return '';
+    const groups = [];
+    for (let n = 0; n < pts.length - 1; n += 4) groups.push(pts.slice(n, n + 5));
+    const links = groups.map((g, n) => {
+      const url = 'https://www.google.com/maps/dir/?api=1&origin=' + encodeURIComponent(navQuery(g[0])) + '&destination=' + encodeURIComponent(navQuery(g[g.length-1])) + '&travelmode=driving' + (g.length > 2 ? '&waypoints=' + encodeURIComponent(g.slice(1,-1).map(navQuery).join('|')) : '');
+      return externalGuideLink(groups.length > 1 ? 'Google 地圖路線 ' + (n+1) + '／' + groups.length : '開啟當日完整路線', url);
+    });
+    return '<div class="day-guide"><strong>🗺️ 今日交通導航</strong><div class="spotlinks">' + links.join('') + '</div><div class="spot-guide-text">' + (pts.some(it => !hasLoc(it)) ? '部分站點以地址導航；外部地圖路線含全部安排。' : '按行程順序開啟外部地圖。') + ' 郵輪泊位仍以船方公告為準。</div></div>';
+  }
   function renderMap() {
     const d = trip.days[ui.dayIdx]; const info = computeDay(d.date);
     $$('.mapbuttons button').forEach(b => b.classList.toggle('active', (b.id === 'previewroute' && ui.mapMode === 'route') || (b.id === 'fit' && ui.mapMode === 'fit') || (b.id === 'voyage' && ui.mapMode === 'voyage')));
     if (!window.L) {
-      const pts = info.items.filter(hasLoc);
+      const pts = info.items.filter(hasNav);
       $('#map').innerHTML = `<div class="mapfallback"><p>地圖服務暫時無法載入，改用外部地圖連結：</p>${pts.map(p => `<a href="${gmaps(p)}" target="_blank" rel="noopener">📍 ${esc(p.title)}</a>`).join('') || '<p>這天沒有上岸地點。</p>'}</div>`;
       return;
     }
@@ -924,13 +953,14 @@
     $$('.timeline-time-row', list).forEach(row => {
       const card = $('.timeline-card', row);
       const open = () => row.dataset.leg ? openLegEditor(row.dataset.leg) : openItemEditor(row.dataset.id);
-      card.addEventListener('click', () => {
+      card.addEventListener('click', e => {
+        if (e.target.closest('a')) return;
         if (window.matchMedia('(hover: none)').matches) { open(); return; }
         if (row.dataset.id) { selectItem(row.dataset.id); showPopover(card, trip.items.find(x => x.id === row.dataset.id)); }
         list.scrollTo({ top: row.offsetTop - list.clientHeight / 2 + row.offsetHeight / 2, behavior: reduceMotion() ? 'auto' : 'smooth' });
       });
-      card.addEventListener('dblclick', () => { hidePopover(); open(); });
-      card.addEventListener('keydown', e => { if (e.key === 'Enter') open(); });
+      card.addEventListener('dblclick', e => { if (e.target.closest('a')) return; hidePopover(); open(); });
+      card.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.target.closest('a')) open(); });
     });
     if (prevScroll != null) list.scrollTop = prevScroll;
     else if (ui.selected) { const row = $(`.timeline-time-row[data-id="${ui.selected}"]`, list); if (row) list.scrollTop = row.offsetTop - list.clientHeight / 2 + row.offsetHeight / 2; }
@@ -942,7 +972,7 @@
     const p = $('#popover');
     const info = computeDay(it.date);
     const warn = info.warns[it.id];
-    p.innerHTML = `<h3>${esc(it.title)}</h3><div>${it.start}–${fmt(endMin(it))}・${durText(Number(it.duration))}</div><div>${CAT[it.category].label}${it.locked ? '・已鎖定' : ''}</div>${it.address ? `<div>${esc(it.address)}</div>` : ''}${it.cost ? `<div>${it.cost.amount != null ? money(it.cost.amount, it.cost.currency) + '／' + perLabel[it.cost.per] : '金額未填'} ${statusTag(it.cost.status)}</div>` : ''}${warn ? `<div style="color:#A33C32">⚠ ${esc(warn.join('；'))}</div>` : ''}${hasLoc(it) ? `<div><a href="${gmaps(it)}" target="_blank" rel="noopener">在 Google 地圖開啟</a></div>` : ''}<div class="hint">雙擊編輯・按住 3 秒可拖移</div>`;
+    p.innerHTML = `<h3>${esc(it.title)}</h3><div>${it.start}–${fmt(endMin(it))}・${durText(Number(it.duration))}</div><div>${CAT[it.category].label}${it.locked ? '・已鎖定' : ''}</div>${it.address ? `<div>${esc(it.address)}</div>` : ''}${it.cost ? `<div>${it.cost.amount != null ? money(it.cost.amount, it.cost.currency) + '／' + perLabel[it.cost.per] : '金額未填'} ${statusTag(it.cost.status)}</div>` : ''}${warn ? `<div style="color:#A33C32">⚠ ${esc(warn.join('；'))}</div>` : ''}${guideHTML(it)}<div class="hint">雙擊編輯・按住 3 秒可拖移</div>`;
     p.hidden = false;
     const r = anchor.getBoundingClientRect();
     const w = p.offsetWidth, h = p.offsetHeight;
