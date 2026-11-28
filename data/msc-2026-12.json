@@ -632,11 +632,11 @@
       "start": "11:30",
       "duration": 45,
       "category": "sight",
-      "title": "首里城正殿內部（建議預約）",
+      "title": "首里城正殿內部（指定時段）",
       "address": "沖繩縣那霸市首里金城町 1-2",
       "cost": null,
-      "note": "正殿內部要日時指定預約；先前查有票，不等於已購。沒票就走外觀、復興展示室與展望台。",
-      "locked": false,
+      "note": "11:30（日本時間）為固定參觀時段，依票券指定時間入場；門票費用已列在首里城公園，這一項不重複計費。",
+      "locked": true,
       "lat": 26.2180634,
       "lng": 127.7160656,
       "mapQuery": "首里城公園 那覇市首里金城町1-2 沖縄県 日本",
@@ -650,7 +650,7 @@
           "url": "https://webket.jp/pc/ticket/index?fc=00471&ac=8001"
         }
       ],
-      "guide": "建議11:30日本時間；選「含正殿內部參觀預約」，自備鞋袋、QR Code。未確認已購票。 Webket 可能先進入排隊頁，餘票與購票結果以官方畫面為準。",
+      "guide": "請備妥票券 QR Code 與鞋袋，依園方指示入場。",
       "locationId": "shurijo",
       "mapStatus": "verified",
       "mapNote": "首里城園區共用入口參考：首里杜館；不是正殿、展示室或展望台的室內定位，園內步行依現場動線。",
@@ -1545,7 +1545,7 @@
       "done": false
     }
   ],
-  "revision": "2026-11-28-v6-leisure-r4-maps-zh",
+  "revision": "2026-11-28-v6-leisure-r5-ticket-time",
   "emergency": {
     "contacts": [
       {
