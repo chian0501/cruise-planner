@@ -454,5 +454,22 @@ dialog::backdrop { background: rgba(62,58,57,.35); }
 .spotlink:hover, .spotlink:focus-visible { text-decoration: underline; outline-offset: 2px; }
 .day-guide { margin: 10px 0; padding: 10px 12px; border: var(--line); background: var(--card); border-radius: 12px; }
 .day-guide .spot-guide-text { margin-top: 7px; }
-@media (max-width: 600px) { .spotlink { min-height: 44px; } }
+.map-status { padding: 10px 14px; border-top: 1px solid var(--ink); font-size: .82rem; line-height: 1.5; }
+.map-status p { color: var(--muted); margin: 0 0 8px; }
+.map-stoplist { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.map-stoplist li { display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 6px; align-items: start; }
+.stop-number { border: 1px solid var(--ink); border-radius: 50%; text-align: center; width: 24px; height: 24px; }
+.map-stoplist .spotlink { min-height: 28px; padding: 3px 7px; margin: 0; }
+.map-stoplist small { display: block; color: var(--muted); }
+.map-note { margin-top: 4px; }
+.map-pin-anchor { position: relative; width: 28px; height: 28px; }
+.map-pin-anchor:is(.shift-left, .shift-right)::before { content: ''; position: absolute; top: 13px; width: 16px; border-top: 2px solid #555; }
+.map-pin-anchor:is(.shift-left, .shift-right)::after { content: ''; position: absolute; left: 11px; top: 11px; width: 6px; height: 6px; border-radius: 50%; background: #555; pointer-events: none; }
+.map-pin-anchor.shift-left::before { left: -2px; }
+.map-pin-anchor.shift-right::before { left: 14px; }
+.map-pin-anchor.shift-left .pin { position: absolute; left: -16px; }
+.map-pin-anchor.shift-right .pin { position: absolute; left: 16px; }
+.legrow > div { min-width: 0; overflow-wrap: anywhere; }
+.legcost { max-width: 6em; }
+@media (max-width: 600px) { .spotlink, .map-stoplist .spotlink { min-height: 44px; } }
 

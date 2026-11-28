@@ -24,9 +24,11 @@
     train: { label: '火車', color: '#4678C5' },
     subway: { label: '地鐵／單軌', color: '#9266C2' },
     shinkansen: { label: '新幹線', color: '#D8902C' },
-    ship: { label: '郵輪', color: '#2E7DAF' }
+    ship: { label: '郵輪', color: '#2E7DAF' },
+    pending: { label: '交通方式待確認', color: '#84909E' }
   };
   const MODE_ICON = {
+    pending: '<path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zm-1 13h2v2h-2zm1-10c4 0 4.5 4.3 1.7 5.8-.7.4-.7.7-.7 1.7h-2c0-1.5.1-2.3 1.5-3.1 1.4-.8 1-2.4-.5-2.4-1 0-1.5.6-1.5 1.5h-2C8.5 7.4 9.8 6 12 6z" fill="currentColor"/>',
     walk: '<path d="M13 4a2 2 0 1 0 0 .1M11 8l-3 4 2 1 2-2 1 4-3 6h2.4l2.6-5 1 5H19l-1.5-7-1-4 2 2h2v-2h-1.5L16 7.5 13 7z" fill="currentColor"/>',
     taxi: '<path d="M6 10l1.5-4h9L18 10h1.5a1.5 1.5 0 0 1 1.5 1.5V17h-2v2h-2.5v-2h-9v2H5v-2H3v-5.5A1.5 1.5 0 0 1 4.5 10zm2-2.2L7.3 10h9.4L16 7.8zM7 14.5a1.2 1.2 0 1 0 0-.1M17 14.5a1.2 1.2 0 1 0 0-.1M9.5 3h5v2h-5z" fill="currentColor"/>',
     bus: '<path d="M5 4h14a2 2 0 0 1 2 2v11h-1v2h-2.5v-2h-11v2H4v-2H3V6a2 2 0 0 1 2-2zm0 3v5h14V7zm2 7.3a1.2 1.2 0 1 0 0-.1M17 14.3a1.2 1.2 0 1 0 0-.1" fill="currentColor"/>',
@@ -89,7 +91,20 @@
   /* ---------- 資料推導 ---------- */
   const dayOf = date => trip.days.find(d => d.date === date);
   const itemsOn = date => trip.items.filter(i => i.date === date).sort((a, b) => toMin(a.start) - toMin(b.start) || a.id.localeCompare(b.id));
-  const hasLoc = i => !i.onboard && i.lat != null && i.lng != null && i.lat !== '' && i.lng !== '';
+  const hasLoc = i => !i.onboard && i.lat != null && i.lng != null && i.lat !== '' && i.lng !== '' && Number.isFinite(Number(i.lat)) && Number.isFinite(Number(i.lng)) && Math.abs(Number(i.lat)) <= 90 && Math.abs(Number(i.lng)) <= 180;
+  const hasNav = it => !it.onboard && (Boolean(it.mapQuery || it.address) || hasLoc(it));
+  const navQuery = it => it.mapQuery || (hasLoc(it) ? it.lat + ',' + it.lng : it.address || '');
+  const sameLocation = (a, b) => a.locationId && b.locationId ? a.locationId === b.locationId : hasNav(a) && hasNav(b) && navQuery(a) === navQuery(b);
+  const hasMinutes = l => l && l.minutes != null && l.minutes !== '' && Number.isFinite(Number(l.minutes));
+  const legTime = l => hasMinutes(l) ? durText(Number(l.minutes)) : '時間待確認';
+  // 同一商場／園區的連續活動共用站點；未定位的站仍保留，不能跨站連線。
+  function routeStops(d) {
+    const stops = [];
+    itemsOn(d.date).filter(it => !it.onboard).forEach(it => {
+      if (!stops.length || !sameLocation(stops[stops.length - 1], it)) stops.push(it);
+    });
+    return stops;
+  }
   function distKm(a, b) {
     const R = 6371, r = x => x * Math.PI / 180;
     const dLa = r(b.lat - a.lat), dLo = r(b.lng - a.lng);
@@ -108,33 +123,38 @@
   function computeDay(date) {
     const day = dayOf(date); const items = itemsOn(date);
     const legs = []; const warns = {}; const addWarn = (id, w) => { (warns[id] = warns[id] || []).push(w); };
-    let lastLoc = null;
+    const fixedBudget = trip.fixedCosts.find(f => f.id === day.fixedTransportCostId);
+    let lastStop = null;
     items.forEach((it, idx) => {
-      if (hasLoc(it)) {
-        if (lastLoc) {
-          const key = `${lastLoc.id}>${it.id}`;
-          const est = estimateLeg(lastLoc, it, day);
+      if (!it.onboard) {
+        if (lastStop && !sameLocation(lastStop, it)) {
+          const key = `${lastStop.id}>${it.id}`;
+          const located = hasLoc(lastStop) && hasLoc(it);
+          const est = located ? estimateLeg(lastStop, it, day) : null;
           const ov = trip.legOverrides[key];
-          if (est || ov) {
-            const leg = Object.assign({ key, from: lastLoc, to: it, estimated: !ov, km: est ? est.km : 0 }, est || { mode: 'walk', minutes: 0, cost: null }, ov || {});
+          if (est || ov || !located) {
+            const leg = Object.assign({ key, from: lastStop, to: it, estimated: !ov || Boolean(ov.estimated) || ov.cost?.status === 'estimate', km: est ? est.km : null }, est || { mode: 'pending', minutes: null, cost: null }, ov || {});
+            leg.drawable = located;
+            if (fixedBudget) { leg.cost = null; leg.budgetName = fixedBudget.name; }
             legs.push(leg);
           }
         }
-        lastLoc = it;
-      } else if (!it.onboard && it.mapQuery) { lastLoc = null; }
+        lastStop = it;
+      } else { lastStop = null; }
       const prev = items[idx - 1];
       if (prev) {
         const leg = legs.find(l => l.to === it && l.from === prev);
-        const need = endMin(prev) + (leg ? Number(leg.minutes) : 0);
+        const need = endMin(prev) + (hasMinutes(leg) ? Number(leg.minutes) : 0);
         if (endMin(prev) > toMin(it.start)) addWarn(it.id, `與「${prev.title}」時間重疊`);
         else if (need > toMin(it.start)) addWarn(it.id, `交通約 ${leg.minutes} 分，可能遲到 ${need - toMin(it.start)} 分`);
+        else if (leg && !hasMinutes(leg)) addWarn(it.id, '交通時間待確認；選定地點後再核對導航與緩衝');
       }
     });
     // 郵輪專屬：上岸行程超過 all aboard
     if (day && day.allAboard) {
       const ab = toMin(day.allAboard);
-      items.filter(hasLoc).forEach(it => {
-        const isPort = Math.abs(it.lat - day.lat) < 0.003 && Math.abs(it.lng - day.lng) < 0.003;
+      items.filter(it => !it.onboard).forEach(it => {
+        const isPort = it.locationId && day.portLocationId ? it.locationId === day.portLocationId : hasLoc(it) && Math.abs(it.lat - day.lat) < 0.003 && Math.abs(it.lng - day.lng) < 0.003;
         if (!isPort && endMin(it) > ab - 30) addWarn(it.id, `結束時間離 All aboard ${day.allAboard} 不到 30 分`);
         if (isPort && toMin(it.start) > ab && !it.onboard && day.portType === 'port') addWarn(it.id, `晚於 All aboard ${day.allAboard}`);
       });
@@ -279,9 +299,13 @@
     if (curIt || nextIt) lines += `<span class="tb-line">${curIt ? `現在：${esc(curIt.title)}（到 ${fmt(endMin(curIt))}）` : '現在：空檔'}${nextIt ? `｜下一站 ${nextIt.start} ${esc(nextIt.title)}` : ''}</span>`;
     if (lock) {
       const leg = info.legs.find(l => l.to === lock);
-      const latest = toMin(lock.start) - (leg ? Number(leg.minutes) : 0);
-      const gap = latest - now.min;
-      lines += `<span class="tb-line tb-latest">最晚 <b>${fmt(latest)}</b> 出發往「${esc(lock.title)}」（${lock.start} 固定${leg ? `，路上約 ${durText(Number(leg.minutes))}` : ''}）${gap <= 0 ? '・已經該出發了' : `・還有 ${durText(gap)}`}</span>`;
+      if (hasMinutes(leg)) {
+        const latest = toMin(lock.start) - Number(leg.minutes);
+        const gap = latest - now.min;
+        lines += `<span class="tb-line tb-latest">最晚 <b>${fmt(latest)}</b> 出發往「${esc(lock.title)}」（${lock.start} 固定，路上約 ${legTime(leg)}）${gap <= 0 ? '・已經該出發了' : `・還有 ${durText(gap)}`}</span>`;
+      } else {
+        lines += `<span class="tb-line tb-latest">「${esc(lock.title)}」固定 ${lock.start}；交通時間未確認，請開導航並預留回船緩衝。</span>`;
+      }
     }
     const canDelay = left > 0 && info.items.some(i => shiftable(i, d, now, lock));
     const btns = canDelay ? `<span class="tb-delay">行程延誤？<button type="button" class="btn" data-delay="15" data-date="${d.date}">順延 15 分</button><button type="button" class="btn" data-delay="30" data-date="${d.date}">順延 30 分</button></span>` : '';
@@ -661,7 +685,7 @@
       const leg = info.legs.find(l => l.to === it);
       if (leg) {
         const walk = leg.mode === 'walk';
-        cards += `<div class="timeline-time-row leg${walk ? ' walk' : ''}" data-min="${endMin(leg.from)}" data-leg="${esc(leg.key)}"><div class="rowtime">${fmt(endMin(leg.from))}</div><div class="timeline-card" tabindex="0" role="button" aria-label="交通：${esc(leg.from.title)} 到 ${esc(leg.to.title)}"><div class="legline">${legIcon(leg.mode)}<span>${walk ? `步行共 ${durText(Number(leg.minutes))}` : `${MODES[leg.mode].label} ${durText(Number(leg.minutes))}`}</span><span class="legmeta">${esc(leg.from.title)} → ${esc(leg.to.title)}</span>${leg.cost && leg.cost.amount != null ? `<span>${money(leg.cost.amount, leg.cost.currency)}／${perLabel[leg.cost.per]}</span>` : ''}${leg.estimated ? '<span class="tag est">估算</span>' : ''}</div></div></div>`;
+        cards += `<div class="timeline-time-row leg${walk ? ' walk' : ''}" data-min="${endMin(leg.from)}" data-leg="${esc(leg.key)}"><div class="rowtime">${fmt(endMin(leg.from))}</div><div class="timeline-card" tabindex="0" role="button" aria-label="交通：${esc(leg.from.title)} 到 ${esc(leg.to.title)}"><div class="legline">${legIcon(leg.mode)}<span>${MODES[leg.mode].label}・${legTime(leg)}</span><span class="legmeta">${esc(leg.from.title)} → ${esc(leg.to.title)}</span>${leg.cost && leg.cost.amount != null ? `<span>${money(leg.cost.amount, leg.cost.currency)}／${perLabel[leg.cost.per]}</span>` : ''}${leg.estimated ? '<span class="tag est">估算</span>' : ''}</div>${legDetailsHTML(leg)}</div></div>`;
       }
       const warn = info.warns[it.id];
       const cost = it.cost && it.cost.amount != null ? `${money(it.cost.amount, it.cost.currency)}／${perLabel[it.cost.per]}${statusTag(it.cost.status)}` : (it.cost && it.cost.status === 'pending' ? '<span class="tag pend">金額待填</span>' : '');
@@ -725,11 +749,20 @@
   }
 
   /* ---------- 地圖 ---------- */
-  let map = null, layer = null;
+  let map = null, layer = null, mapLabels = [];
+  function positionMapLabels() {
+    if (!map) return;
+    const labels = mapLabels.map(m => ({ node: m.getElement()?.querySelector('.map-pin-anchor'), pt: map.latLngToLayerPoint(m.getLatLng()) })).filter(x => x.node).sort((a, b) => a.pt.x - b.pt.x);
+    labels.forEach(x => x.node.classList.remove('shift-left', 'shift-right'));
+    labels.forEach((a, n) => labels.slice(n + 1).forEach(b => {
+      if (a.pt.distanceTo(b.pt) < 36) { a.node.classList.add('shift-left'); b.node.classList.add('shift-right'); }
+    }));
+  }
   function initMap() {
     if (map || !window.L) return;
     const LAND = window.__LAND || null;
     map = L.map('map', { zoomControl: true, attributionControl: true, maxZoom: LAND ? 15 : 19 });
+    map.on('zoomend', positionMapLabels);
     if (!EMBED) L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
     else if (LAND) {
       // 線上版：內嵌的陸地輪廓（Natural Earth，公有領域），海面用水色
@@ -739,8 +772,6 @@
     } else $('#map').classList.add('notiles');
     layer = L.layerGroup().addTo(map);
   }
-  const hasNav = it => !it.onboard && (Boolean(it.mapQuery) || hasLoc(it));
-  const navQuery = it => it.mapQuery || (hasLoc(it) ? it.lat + ',' + it.lng : '');
   function gmaps(it) { return 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(navQuery(it)); }
   function externalGuideLink(label, url) {
     try { const u = new URL(url); if (!['https:', 'http:'].includes(u.protocol)) return ''; }
@@ -754,29 +785,50 @@
       links.push(externalGuideLink('前往這裡', 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(navQuery(it)) + '&travelmode=driving'));
     }
     if (Array.isArray(it.links)) it.links.forEach(l => { if (l && l.url && l.label) links.push(externalGuideLink(l.label, l.url)); });
-    if (!it.guide && !links.some(Boolean)) return '';
-    return '<div class="spot-guide">' + (it.guide ? '<div class="spot-guide-text">' + esc(it.guide) + '</div>' : '') + (links.some(Boolean) ? '<div class="spotlinks">' + links.join('') + '</div>' : '') + '</div>';
+    if (it.mapSource) links.push(externalGuideLink('標點依據', it.mapSource));
+    if (!it.guide && !it.mapNote && !links.some(Boolean)) return '';
+    return '<div class="spot-guide">' + (it.guide ? '<div class="spot-guide-text">' + esc(it.guide) + '</div>' : '') + (it.navigationName ? '<div class="spot-guide-text">日文／原名：' + esc(it.navigationName) + '</div>' : '') + (it.mapNote ? '<div class="spot-guide-text map-note">' + esc(it.mapNote) + '</div>' : '') + (links.some(Boolean) ? '<div class="spotlinks">' + links.join('') + '</div>' : '') + '</div>';
+  }
+  function directionsURL(from, to, mode, via = []) {
+    const travelmode = mode === 'walk' ? 'walking' : mode === 'taxi' ? 'driving' : mode === 'pending' ? '' : 'transit';
+    return 'https://www.google.com/maps/dir/?api=1&origin=' + encodeURIComponent(navQuery(from)) + '&destination=' + encodeURIComponent(navQuery(to)) + (travelmode ? '&travelmode=' + travelmode : '') + (via.length ? '&waypoints=' + encodeURIComponent(via.map(navQuery).join('|')) : '');
+  }
+  function legDetailsHTML(l) {
+    const note = [l.note, l.budgetName ? '車資已含固定計程車預算，不另加計。' : '', !l.drawable ? '未取得兩端精確標點；以地址導航，站間不畫連線。' : '', l.from.mapStatus === 'reference' || l.to.mapStatus === 'reference' ? '港口為參考點，實際上車處依船方公告。' : ''].filter(Boolean).join(' ');
+    const link = hasNav(l.from) && hasNav(l.to) ? externalGuideLink('這一段導航', directionsURL(l.from, l.to, l.mode)) : '';
+    return (note ? '<div class="spot-guide-text">' + esc(note) + '</div>' : '') + (link ? '<div class="spotlinks">' + link + '</div>' : '');
   }
   function dayRouteHTML(d) {
-    const pts = (d.routeIds || []).map(id => trip.items.find(it => it.id === id)).filter(it => it && hasNav(it));
+    if (!d.routeIds) return '';
+    const pts = routeStops(d);
     if (pts.length < 2) return '';
-    const groups = [];
-    for (let n = 0; n < pts.length - 1; n += 4) groups.push(pts.slice(n, n + 5));
+    const groups = []; let run = [];
+    const flush = () => { // Google 地圖手機網頁最多三個途經站；分段端點必須銜接。
+      for (let n = 0; n < run.length - 1; n += 4) groups.push(run.slice(n, n + 5));
+      run = [];
+    };
+    pts.forEach(it => { if (hasNav(it)) run.push(it); else flush(); }); flush();
     const links = groups.map((g, n) => {
-      const url = 'https://www.google.com/maps/dir/?api=1&origin=' + encodeURIComponent(navQuery(g[0])) + '&destination=' + encodeURIComponent(navQuery(g[g.length-1])) + '&travelmode=driving' + (g.length > 2 ? '&waypoints=' + encodeURIComponent(g.slice(1,-1).map(navQuery).join('|')) : '');
-      return externalGuideLink(groups.length > 1 ? 'Google 地圖路線 ' + (n+1) + '／' + groups.length : '開啟當日完整路線', url);
+      return externalGuideLink(groups.length > 1 ? 'Google 地圖路線 ' + (n+1) + '／' + groups.length : '開啟當日路線', directionsURL(g[0], g[g.length - 1], 'taxi', g.slice(1, -1)));
     });
-    return '<div class="day-guide"><strong>🗺️ 今日交通導航</strong><div class="spotlinks">' + links.join('') + '</div><div class="spot-guide-text">' + (pts.some(it => !hasLoc(it)) ? '部分站點以地址導航；外部地圖路線含全部安排。' : '按行程順序開啟外部地圖。') + ' 郵輪泊位仍以船方公告為準。</div></div>';
+    const pending = pts.filter(it => !hasLoc(it));
+    return '<div class="day-guide"><strong>🗺️ 今日交通導航</strong><div class="spot-guide-text">' + pts.map(it => esc(it.title)).join(' → ') + '</div><div class="spotlinks">' + links.join('') + '</div><div class="spot-guide-text">' + (pending.length ? '地址／區域導航：' + pending.map(it => esc(it.title)).join('、') + '；不是已確認的店家精確標點。' : '按目前行程順序開啟外部地圖；同一園區與商場共用入口點。') + (pts.some(it => !hasNav(it)) ? ' 有站點缺導航資料，路線已在該站中斷，不跳站串接。' : '') + ' 郵輪泊位仍以船方公告為準；地址導航與候車時間請現場核對。</div></div>';
   }
   function renderMap() {
     const d = trip.days[ui.dayIdx]; const info = computeDay(d.date);
+    const stops = routeStops(d);
+    const status = $('#mapstatus');
+    if (status) {
+      status.hidden = ui.mapMode === 'voyage';
+      status.innerHTML = '<p>虛線只示意行程順序，並非實際道路。車程為規劃估算，實際道路請開 Google 地圖導航。</p>' + (stops.length ? '<ol class="map-stoplist">' + stops.map((p, n) => '<li><span class="stop-number">' + (n + 1) + '</span><div>' + (hasNav(p) ? externalGuideLink(p.title, gmaps(p)) : esc(p.title)) + (p.mapStatus === 'reference' ? '<small>港區參考點・泊位待船方確認</small>' : !hasLoc(p) ? '<small>僅地址／區域導航・未放精確標點</small>' : '') + '</div></li>').join('') + '</ol>' : '');
+    }
     $$('.mapbuttons button').forEach(b => b.classList.toggle('active', (b.id === 'previewroute' && ui.mapMode === 'route') || (b.id === 'fit' && ui.mapMode === 'fit') || (b.id === 'voyage' && ui.mapMode === 'voyage')));
     if (!window.L) {
       const pts = info.items.filter(hasNav);
       $('#map').innerHTML = `<div class="mapfallback"><p>地圖服務暫時無法載入，改用外部地圖連結：</p>${pts.map(p => `<a href="${gmaps(p)}" target="_blank" rel="noopener">📍 ${esc(p.title)}</a>`).join('') || '<p>這天沒有上岸地點。</p>'}</div>`;
       return;
     }
-    initMap(); layer.clearLayers();
+    initMap(); layer.clearLayers(); mapLabels = [];
     const bounds = [];
     if (ui.mapMode === 'voyage') {
       const pts = trip.days.map(x => [x.lat, x.lng]);
@@ -798,36 +850,43 @@
       map.fitBounds(bounds, { padding: [40, 40] });
       return;
     }
-    const pts = info.items.filter(hasLoc);
+    const pts = stops.map((p, i) => ({ p, n: i + 1 })).filter(x => hasLoc(x.p));
     const groups = {};
-    pts.forEach((p, i) => { const k = p.lat.toFixed(4) + ',' + p.lng.toFixed(4); (groups[k] = groups[k] || []).push({ p, n: i + 1 }); });
+    pts.forEach(({ p, n }) => { const k = Number(p.lat).toFixed(5) + ',' + Number(p.lng).toFixed(5); (groups[k] = groups[k] || []).push({ p, n }); });
     Object.values(groups).forEach(g => {
-      const p = g[0].p; const sel = g.some(x => x.p.id === ui.selected);
+      const p = g[0].p; const selected = trip.items.find(it => it.id === ui.selected);
+      const sel = g.some(x => x.p.id === ui.selected || selected && sameLocation(x.p, selected));
       const color = CAT[p.category].color;
-      const m = L.marker([p.lat, p.lng], { icon: L.divIcon({ className: '', html: `<div class="pin${sel ? ' sel' : ''}" style="background:${color}">${g.map(x => x.n).join(',')}</div>`, iconSize: [28, 28], iconAnchor: [14, 14] }) });
-      m.bindTooltip(g.map(x => `${x.p.start} ${esc(x.p.title)}`).join('<br>'));
+      const m = L.marker([p.lat, p.lng], { icon: L.divIcon({ className: '', html: `<div class="map-pin-anchor"><div class="pin${sel ? ' sel' : ''}" style="background:${color}">${g.map(x => x.n).join(',')}</div></div>`, iconSize: [28, 28], iconAnchor: [14, 14] }) });
+      m.bindTooltip(g.map(x => `${x.p.start} ${esc(x.p.title)}${x.p.mapNote ? '<br>' + esc(x.p.mapNote) : ''}`).join('<br>'));
       if (EMBED) m.bindPopup(g.map(x => `${x.p.start} ${esc(x.p.title)}<br><a href="${gmaps(x.p)}" target="_blank" rel="noopener">在 Google 地圖開啟</a>`).join('<hr>'));
       m.on('click', () => selectItem(p.id, true));
-      m.addTo(layer); bounds.push([p.lat, p.lng]);
+      m.addTo(layer); mapLabels.push(m); bounds.push([p.lat, p.lng]);
     });
-    let focusLegs = info.legs;
-    if (ui.mapMode === 'route' && ui.selected) { const f = info.legs.filter(l => l.to.id === ui.selected || l.from.id === ui.selected); if (f.length) focusLegs = f; }
-    info.legs.forEach(l => {
+    const drawableLegs = info.legs.filter(l => l.drawable);
+    let focusLegs = drawableLegs;
+    if (ui.mapMode === 'route' && ui.selected) { const f = drawableLegs.filter(l => l.to.id === ui.selected || l.from.id === ui.selected); if (f.length) focusLegs = f; }
+    drawableLegs.forEach(l => {
       const active = focusLegs.includes(l);
-      L.polyline([[l.from.lat, l.from.lng], [l.to.lat, l.to.lng]], { color: MODES[l.mode].color, weight: active ? 5 : 3, opacity: active ? 0.95 : 0.35, dashArray: l.mode === 'walk' ? '3 7' : null, lineCap: 'round' })
-        .bindTooltip(`${MODES[l.mode].label} ${durText(Number(l.minutes))}`).addTo(layer);
+      L.polyline([[l.from.lat, l.from.lng], [l.to.lat, l.to.lng]], { color: MODES[l.mode].color, weight: active ? 5 : 3, opacity: active ? 0.95 : 0.35, dashArray: '4 7', lineCap: 'round' })
+        .bindTooltip(`行程順序示意（非道路）・${MODES[l.mode].label} ${legTime(l)}`).addTo(layer);
     });
-    if (ui.mapMode === 'route' && focusLegs.length && focusLegs !== info.legs) {
+    if (ui.mapMode === 'route' && focusLegs.length && focusLegs !== drawableLegs) {
       const b = []; focusLegs.forEach(l => { b.push([l.from.lat, l.from.lng], [l.to.lat, l.to.lng]); }); map.fitBounds(b, { padding: [50, 50], maxZoom: 15 });
     } else if (bounds.length > 1) map.fitBounds(bounds, { padding: [36, 36], maxZoom: 15 });
     else if (bounds.length === 1) map.setView(bounds[0], 14);
     else map.setView([d.lat, d.lng], 12);
+    positionMapLabels();
     setTimeout(() => map.invalidateSize(), 50);
   }
   function renderRoutes() {
     const d = trip.days[ui.dayIdx]; const info = computeDay(d.date);
     $('#routecount').textContent = `${dateLabel(d.date).md}・${info.legs.length} 段`;
-    $('#routelist').innerHTML = info.legs.length ? info.legs.map(l => `<div class="legrow" tabindex="0" role="button" data-leg="${esc(l.key)}" aria-label="編輯交通：${esc(l.from.title)} 到 ${esc(l.to.title)}">${legIcon(l.mode)}<div><div>${esc(l.from.title)} → ${esc(l.to.title)}</div><div class="legmeta">${MODES[l.mode].label}・${durText(Number(l.minutes))}${l.km ? `・約 ${l.km.toFixed(1)} km` : ''}${l.estimated ? '<span class="tag est">估算</span>' : '<span class="tag">已編輯</span>'}</div></div><div class="legcost">${l.cost && l.cost.amount != null ? `${money(l.cost.amount, l.cost.currency)}<div class="legmeta">${perLabel[l.cost.per]}</div>` : '—'}</div></div>`).join('') : '<p class="emptynote">這天沒有上岸移動（船上行程不計交通）。</p>';
+    $('#routelist').innerHTML = info.legs.length ? info.legs.map(l => `<div class="legrow" tabindex="0" role="button" data-leg="${esc(l.key)}" aria-label="編輯交通：${esc(l.from.title)} 到 ${esc(l.to.title)}">${legIcon(l.mode)}<div><div>${esc(l.from.title)} → ${esc(l.to.title)}</div><div class="legmeta">${MODES[l.mode].label}・${legTime(l)}${l.km ? `・直線換算約 ${l.km.toFixed(1)} km` : ''}${l.estimated ? '<span class="tag est">估算</span>' : '<span class="tag">已編輯</span>'}</div>${legDetailsHTML(l)}</div><div class="legcost">${l.budgetName ? '已含固定預算' : l.cost && l.cost.amount != null ? `${money(l.cost.amount, l.cost.currency)}<div class="legmeta">${perLabel[l.cost.per]}</div>` : '車資待確認'}</div></div>`).join('') : '<p class="emptynote">這天沒有上岸移動（船上行程不計交通）。</p>';
+    $$('.legrow', $('#routelist')).forEach(row => {
+      row.onclick = e => { if (!e.target.closest('a')) openLegEditor(row.dataset.leg); };
+      row.onkeydown = e => { if (e.key === 'Enter' && !e.target.closest('a')) { e.preventDefault(); openLegEditor(row.dataset.leg); } };
+    });
   }
 
   /* ---------- 規劃頁組裝 ---------- */
@@ -960,7 +1019,7 @@
         list.scrollTo({ top: row.offsetTop - list.clientHeight / 2 + row.offsetHeight / 2, behavior: reduceMotion() ? 'auto' : 'smooth' });
       });
       card.addEventListener('dblclick', e => { if (e.target.closest('a')) return; hidePopover(); open(); });
-      card.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.target.closest('a')) open(); });
+      card.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.target.closest('a')) { e.preventDefault(); open(); } });
     });
     if (prevScroll != null) list.scrollTop = prevScroll;
     else if (ui.selected) { const row = $(`.timeline-time-row[data-id="${ui.selected}"]`, list); if (row) list.scrollTop = row.offsetTop - list.clientHeight / 2 + row.offsetHeight / 2; }
@@ -1024,15 +1083,28 @@
       const fd = new FormData(f);
       const lat = fd.get('lat').trim(), lng = fd.get('lng').trim();
       const amount = fd.get('amount');
-      const upd = {
+      const upd = { ...it,
         id: it.id, title: fd.get('title').trim(), date: fd.get('date'), category: fd.get('category'), start: fd.get('start'), duration: Math.max(5, Number(fd.get('duration'))),
         address: fd.get('address').trim(), onboard: fd.get('onboard') === 'on', lat: lat === '' ? null : Number(lat), lng: lng === '' ? null : Number(lng),
         cost: (amount === '' && fd.get('status') !== 'pending') ? null : { amount: amount === '' ? null : Number(amount), currency: fd.get('currency'), per: fd.get('per'), status: fd.get('status') },
         note: fd.get('note').trim(), locked: fd.get('locked') === 'on'
       };
+      const coordValue = v => v == null || v === '' ? null : Number(v);
+      const addressEdited = upd.address !== it.address;
+      const coordsEdited = coordValue(upd.lat) !== coordValue(it.lat) || coordValue(upd.lng) !== coordValue(it.lng);
+      if (addressEdited || coordsEdited) {
+        ['locationId', 'mapQuery', 'mapSource', 'mapStatus', 'mapNote'].forEach(k => delete upd[k]);
+        if (addressEdited) {
+          ['navigationName', 'links', 'guide'].forEach(k => delete upd[k]);
+          // 只改地址時，表單裡原本的座標不代表新地址，不能沿用舊標點。
+          if (!coordsEdited) { upd.lat = null; upd.lng = null; }
+        }
+        upd.mapStatus = hasLoc(upd) ? 'user' : 'address';
+        upd.mapNote = hasLoc(upd) ? '使用者填寫的座標，尚未核對景點來源；請確認地址與導航。' : '使用者修改的地點；僅地址導航，精確標點待確認。';
+      }
       const bk = { time: fd.get('bk-time'), people: fd.get('bk-people') === '' ? '' : Number(fd.get('bk-people')), name: fd.get('bk-name').trim(), ref: fd.get('bk-ref').trim() };
-      if (bk.time || bk.people || bk.name || bk.ref) upd.booking = bk;
-      const review = fd.get('review').trim(); if (review) upd.review = review;
+      if (bk.time || bk.people || bk.name || bk.ref) upd.booking = bk; else delete upd.booking;
+      const review = fd.get('review').trim(); if (review) upd.review = review; else delete upd.review;
       dlg.close();
       commit(t => { const i = t.items.findIndex(x => x.id === upd.id); if (i >= 0) t.items[i] = upd; else t.items.push(upd); }, isNew ? `已新增「${upd.title}」` : `已更新「${upd.title}」，相鄰交通已重算`);
       ui.selected = upd.id; const di = trip.days.findIndex(d => d.date === upd.date); if (di !== ui.dayIdx) { ui.dayIdx = di; ui.bounceIdx = di; render(); }
@@ -1044,10 +1116,10 @@
     const c = l.cost || { amount: '', currency: 'JPY', per: 'vehicle', status: 'estimate' };
     const dlg = $('#editor');
     dlg.innerHTML = `<form method="dialog" id="legform"><div class="dlghead"><h2>編輯交通</h2><button type="button" class="iconbtn" data-close aria-label="關閉">✕</button></div>
-      <div class="dlgbody"><p class="full" style="grid-column:1/-1;margin:0">${esc(l.from.title)} → ${esc(l.to.title)}${l.km ? `（直線換算約 ${l.km.toFixed(1)} km）` : ''}</p>
+      <div class="dlgbody"><p class="full" style="grid-column:1/-1;margin:0">${esc(l.from.title)} → ${esc(l.to.title)}${l.km ? `（直線換算約 ${l.km.toFixed(1)} km）` : ''}${l.budgetName ? '<br>車資已含固定預算；此處只調交通方式與時間，總額請到「費用總覽」修改。' : ''}</p>
         <label>交通方式<select name="mode">${Object.entries(MODES).filter(([k]) => k !== 'ship').map(([k, v]) => `<option value="${k}"${k === l.mode ? ' selected' : ''}>${v.label}</option>`).join('')}</select></label>
-        <label>時長（分鐘）<input type="number" name="minutes" min="0" value="${l.minutes}"></label>
-        <label>金額<input type="number" name="amount" min="0" step="any" value="${c.amount ?? ''}" placeholder="未填"></label>
+        <label>時長（分鐘）<input type="number" name="minutes" min="0" value="${l.minutes ?? ''}" placeholder="待確認"></label>
+        <label>金額<input type="number" name="amount" min="0" step="any" value="${c.amount ?? ''}" placeholder="${l.budgetName ? '已含固定預算' : '未填'}"${l.budgetName ? ' disabled' : ''}></label>
         <label>幣別<select name="currency">${Object.keys(trip.currencies).map(k => `<option${k === c.currency ? ' selected' : ''}>${k}</option>`).join('')}</select></label>
         <label>計價<select name="per">${Object.entries(perLabel).map(([k, v]) => `<option value="${k}"${k === c.per ? ' selected' : ''}>${v}</option>`).join('')}</select></label>
         <label>金額狀態<select name="status"><option value="confirmed"${c.status === 'confirmed' ? ' selected' : ''}>已確認</option><option value="estimate"${c.status === 'estimate' ? ' selected' : ''}>估算</option><option value="pending"${c.status === 'pending' ? ' selected' : ''}>待確認</option></select></label>
@@ -1059,7 +1131,7 @@
     $('#legform').onsubmit = e => {
       e.preventDefault(); const fd = new FormData(e.target); const amount = fd.get('amount');
       dlg.close();
-      commit(t => { t.legOverrides[key] = { mode: fd.get('mode'), minutes: Number(fd.get('minutes')), cost: amount === '' ? null : { amount: Number(amount), currency: fd.get('currency'), per: fd.get('per'), status: fd.get('status') } }; }, '交通已更新，前後行程已重新檢查');
+      commit(t => { t.legOverrides[key] = { mode: fd.get('mode'), minutes: fd.get('minutes') === '' ? null : Number(fd.get('minutes')), cost: l.budgetName || amount === '' ? null : { amount: Number(amount), currency: fd.get('currency'), per: fd.get('per'), status: fd.get('status') } }; }, '交通已更新，前後行程已重新檢查');
     };
   }
   function openFixedEditor(id) {
